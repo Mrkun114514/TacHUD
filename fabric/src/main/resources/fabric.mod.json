@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": ["Mrkun114514"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.mrkun.tachud.fabric.TacHudFabric"],
+    "client": ["com.mrkun.tachud.fabric.client.TacHudFabricClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16",
+    "minecraft": ">=1.21 <1.22",
+    "java": ">=21",
+    "fabric-api": "*",
+    "architectury": ">=13.0.0"
+  }
+}

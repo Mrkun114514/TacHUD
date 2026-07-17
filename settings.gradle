@@ -1,0 +1,19 @@
+pluginManagement {
+    repositories {
+        maven { url = "https://maven.fabricmc.net/" }
+        maven { url = "https://maven.architectury.dev/" }
+        // Forge-era tooling artifacts (installertools / mcinjector / DiffPatch) live here.
+        // Placed BEFORE neoforged because neoforged.net is unreachable from this JVM
+        // (Connection reset), while forge's own maven resolves fine.
+        maven { url = "https://maven.minecraftforge.net/" }
+        maven { url = "https://maven.neoforged.net/releases/" }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "tachud"
+
+include("common")
+include("fabric")
+include("neoforge")
