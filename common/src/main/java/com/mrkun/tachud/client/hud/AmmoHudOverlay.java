@@ -12,7 +12,7 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 
 /**
  * Bottom-left ammo / durability readout, laid out like a COD ammo counter:
- * a colored accent bar, a small label, a large primary value and a secondary
+ * a colored accent bar, a small label, a primary value and a secondary
  * detail line.
  *
  * <ul>
@@ -47,9 +47,8 @@ public final class AmmoHudOverlay {
         int barColor = info.low() ? low : accent;
         int valueColor = info.low() ? low : textColor;
 
-        final float scale = 1.7f;
         int labelH = font.lineHeight;
-        int bigH = Math.round(font.lineHeight * scale);
+        int bigH = font.lineHeight;
         int totalH = labelH + 2 + bigH;
 
         int x = a.marginX;
@@ -62,15 +61,12 @@ public final class AmmoHudOverlay {
         // Small label.
         g.drawString(font, info.label(), textX, topY, labelColor, false);
 
-        // Large primary value.
-        g.pose().pushPose();
-        g.pose().translate(textX, topY + labelH + 2, 0);
-        g.pose().scale(scale, scale, 1f);
-        g.drawString(font, info.value(), 0, 0, valueColor, true);
-        g.pose().popPose();
+        // Primary value. 1.21.8 removed PoseStack scaling, so we draw at native
+        // size; the accent bar + label keep the COD-style readout intact.
+        g.drawString(font, info.value(), textX, topY + labelH + 2, valueColor, true);
+        int bigW = font.width(info.value());
 
-        // Secondary detail, baseline-aligned with the big value.
-        int bigW = Math.round(font.width(info.value()) * scale);
+        // Secondary detail, baseline-aligned with the primary value.
         g.drawString(font, info.detail(), textX + bigW + 6, bottom - font.lineHeight, labelColor, false);
     }
 
@@ -97,10 +93,9 @@ public final class AmmoHudOverlay {
     private static int countArrows(LocalPlayer player) {
         Inventory inv = player.getInventory();
         int count = 0;
-        for (ItemStack s : inv.items) {
-            if (s.is(ItemTags.ARROWS)) count += s.getCount();
-        }
-        for (ItemStack s : inv.offhand) {
+        // 1.21.8: Inventory.items / offhand are no longer public fields.
+        // getNonEquipmentItems() returns the combined main + offhand stacks.
+        for (ItemStack s : inv.getNonEquipmentItems()) {
             if (s.is(ItemTags.ARROWS)) count += s.getCount();
         }
         return count;

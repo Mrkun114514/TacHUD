@@ -1,6 +1,5 @@
 package com.mrkun.tachud.client.hud;
 
-import com.mojang.math.Axis;
 import com.mrkun.tachud.config.TacHudConfig;
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -46,12 +45,27 @@ public final class HitMarkerOverlay {
         }
     }
 
+    /**
+     * Draws one prong as a short thick line starting at radius {@code gap} from the
+     * crosshair and extending {@code len} pixels along {@code angleDeg}.
+     *
+     * <p>1.21.8 removed {@code PoseStack} (and its {@code pushPose}/{@code popPose}/
+     * {@code mulPose} methods); {@code GuiGraphics.pose()} now returns a
+     * {@code Matrix3x2fStack}. Rather than depend on that matrix API, we
+     * rasterize the rotated bar directly with {@link GuiGraphics#fill}.
+     */
     private static void prong(GuiGraphics g, float cx, float cy, float angleDeg,
                               int gap, int len, int color) {
-        g.pose().pushPose();
-        g.pose().translate(cx, cy, 0);
-        g.pose().mulPose(Axis.ZP.rotationDegrees(angleDeg));
-        g.fill(gap, -1, gap + len, 1, color);
-        g.pose().popPose();
+        double rad = Math.toRadians(angleDeg);
+        float dx = (float) Math.cos(rad);
+        float dy = (float) Math.sin(rad);
+        int th = 2; // prong thickness in pixels
+        int half = th / 2;
+        for (int i = 0; i <= len; i++) {
+            float d = gap + i;
+            int px = Math.round(cx + dx * d);
+            int py = Math.round(cy + dy * d);
+            g.fill(px - half, py - half, px - half + th, py - half + th, color);
+        }
     }
 }

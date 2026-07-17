@@ -23,7 +23,9 @@ configurations {
 }
 
 dependencies {
-    neoForge "net.neoforged:neoforge:${project.neoforge_version}"
+    // Loom 1.10 renamed the NeoForge dependency handler to `neoforge` (lowercase-f);
+    // architectury-plugin's old `neoForge(...)` is no longer registered for this Loom version.
+    neoforge "net.neoforged:neoforge:${project.neoforge_version}"
 
     // Architectury API for NeoForge
     modApi "dev.architectury:architectury-neoforge:${project.architectury_api_version}"
