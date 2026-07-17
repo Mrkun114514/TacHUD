@@ -1,0 +1,8 @@
+architectury {
+    common("fabric", "neoforge")
+}
+
+dependencies {
+    // Architectury API (common / intermediary-remapped classes)
+    modImplementation "dev.architectury:architectury:${project.architectury_api_version}"
+}

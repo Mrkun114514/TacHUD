@@ -1,0 +1,35 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+bin/
+eclipse/
+run/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Loom
+.architectury-transformer/
+
+# WorkBuddy 内部记忆 / 本地状态（绝不入库）
+.workbuddy/
+
+# Gradle 用户级缓存
+.gradle/
+
+# 本地运行配置 / 密钥
+gradle.properties.local
+secrets.properties
+local.properties
