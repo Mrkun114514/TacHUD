@@ -16,10 +16,4 @@ rootProject.name = "tachud"
 
 include("common")
 include("fabric")
-// NOTE: NeoForge is temporarily excluded from the build.
-// architectury-plugin 3.4.164 (the only published version) has a `neoForge()`
-// action that is broken against Architectury Loom 1.10.455 — it no longer
-// creates the `neoForge` configuration, so the NeoForge dependency handler
-// method is unavailable. There is no newer plugin release to fix this.
-// Re-enable once architectury ships a Loom-1.10-compatible plugin:
-// include("neoforge")
+include("neoforge")

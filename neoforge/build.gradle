@@ -23,15 +23,25 @@ configurations {
 }
 
 dependencies {
-    // Loom 1.10 renamed the NeoForge dependency handler to `neoforge` (lowercase-f);
-    // architectury-plugin's old `neoForge(...)` is no longer registered for this Loom version.
-    neoforge "net.neoforged:neoforge:${project.neoforge_version}"
+    // The `neoForge` dependency handler + configuration are provided natively
+    // by Loom 1.10 once `loom.platform=neoforge` is set (see
+    // neoforge/gradle.properties). architectury-plugin 3.4.164's
+    // `neoForge()` action no longer installs them, so the platform is
+    // declared per-project instead of relying on the broken plugin action.
+    neoForge "net.neoforged:neoforge:${project.neoforge_version}"
 
     // Architectury API for NeoForge
     modApi "dev.architectury:architectury-neoforge:${project.architectury_api_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowBundle project(path: ":common", configuration: "transformProductionNeoForge")
+}
+
+// Engage Loom 1.10's native NeoForge extension. Valid only once
+// `loom.platform=neoforge` is active (set in neoforge/gradle.properties).
+loom {
+    neoForge {
+    }
 }
 
 processResources {
