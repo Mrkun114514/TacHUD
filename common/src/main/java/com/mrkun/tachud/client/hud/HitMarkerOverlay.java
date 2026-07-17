@@ -1,5 +1,6 @@
 package com.mrkun.tachud.client.hud;
 
+import com.mrkun.tachud.client.hud.HudScale;
 import com.mrkun.tachud.config.TacHudConfig;
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -25,6 +26,7 @@ public final class HitMarkerOverlay {
         TacHudConfig.HitMarker hm = cfg.hitMarker;
         if (!hm.enabled) return;
 
+        double f = HudScale.factor(height, cfg);
         long age = now - lastHit;
         if (age < 0 || age > hm.durationMs) return;
 
@@ -37,11 +39,11 @@ public final class HitMarkerOverlay {
 
         float cx = width / 2f;
         float cy = height / 2f;
-        int gap = Math.round((float) hm.gap + t * (float) hm.size * 0.6f);
-        int len = Math.max(2, Math.round((float) hm.size));
+        int gap = Math.round((float) ((hm.gap + t * hm.size * 0.6) * f));
+        int len = Math.max(2, Math.round((float) (hm.size * f)));
 
         for (float angle : new float[]{45f, 135f, 225f, 315f}) {
-            prong(g, cx, cy, angle, gap, len, color);
+            prong(g, cx, cy, angle, gap, len, color, f);
         }
     }
 
@@ -55,11 +57,11 @@ public final class HitMarkerOverlay {
      * rasterize the rotated bar directly with {@link GuiGraphics#fill}.
      */
     private static void prong(GuiGraphics g, float cx, float cy, float angleDeg,
-                              int gap, int len, int color) {
+                              int gap, int len, int color, double f) {
         double rad = Math.toRadians(angleDeg);
         float dx = (float) Math.cos(rad);
         float dy = (float) Math.sin(rad);
-        int th = 2; // prong thickness in pixels
+        int th = Math.max(1, Math.round((float) (2.0 * f))); // prong thickness in pixels
         int half = th / 2;
         for (int i = 0; i <= len; i++) {
             float d = gap + i;

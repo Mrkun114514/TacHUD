@@ -1,6 +1,8 @@
 package com.mrkun.tachud.client;
 
+import com.mrkun.tachud.client.ClientSound;
 import com.mrkun.tachud.client.hud.HitMarkerOverlay;
+import com.mrkun.tachud.client.hud.KillConfirmOverlay;
 import com.mrkun.tachud.client.hud.KillFeedOverlay;
 import com.mrkun.tachud.config.ConfigManager;
 import com.mrkun.tachud.config.TacHudConfig;
@@ -26,6 +28,10 @@ public final class ClientPacketHandlers {
             return;
         }
         KillFeedOverlay.addKill(payload.victimName(), payload.victimIsPlayer());
+        if (cfg.killConfirm.enabled) {
+            KillConfirmOverlay.trigger();
+        }
+        ClientSound.playKill();
     }
 
     public static void onHit(HitPayload payload) {
@@ -34,5 +40,6 @@ public final class ClientPacketHandlers {
             return;
         }
         HitMarkerOverlay.trigger(payload.fatal());
+        ClientSound.playHit(payload.fatal());
     }
 }

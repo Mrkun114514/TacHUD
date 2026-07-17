@@ -1,5 +1,6 @@
 package com.mrkun.tachud.client.hud;
 
+import com.mrkun.tachud.client.hud.HudScale;
 import com.mrkun.tachud.config.TacHudConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -33,6 +34,7 @@ public final class AmmoHudOverlay {
         TacHudConfig.AmmoHud a = cfg.ammoHud;
         if (!a.enabled) return;
 
+        double f = HudScale.factor(height, cfg);
         Info info = analyze(player.getMainHandItem(), player, a);
         if (info == null && a.useOffhandFallback) {
             info = analyze(player.getOffhandItem(), player, a);
@@ -51,23 +53,25 @@ public final class AmmoHudOverlay {
         int bigH = font.lineHeight;
         int totalH = labelH + 2 + bigH;
 
-        int x = a.marginX;
-        int bottom = height - a.marginY;
+        int x = (int) (a.marginX * f);
+        int bottom = height - (int) (a.marginY * f);
         int topY = bottom - totalH;
-        int textX = x + 6;
+        int textX = x + (int) (6.0 * f);
+        int barW = Math.max(1, (int) (2.0 * f));
 
         // Left accent bar.
-        g.fill(x, topY, x + 2, bottom, barColor);
+        g.fill(x, topY, x + barW, bottom, barColor);
         // Small label.
         g.drawString(font, info.label(), textX, topY, labelColor, false);
 
         // Primary value. 1.21.8 removed PoseStack scaling, so we draw at native
-        // size; the accent bar + label keep the COD-style readout intact.
+        // size (it already tracks Minecraft's GUI scale); the accent bar + label
+        // keep the COD-style readout intact and now also scale with uiScale.
         g.drawString(font, info.value(), textX, topY + labelH + 2, valueColor, true);
         int bigW = font.width(info.value());
 
         // Secondary detail, baseline-aligned with the primary value.
-        g.drawString(font, info.detail(), textX + bigW + 6, bottom - font.lineHeight, labelColor, false);
+        g.drawString(font, info.detail(), textX + bigW + (int) (6.0 * f), bottom - font.lineHeight, labelColor, false);
     }
 
     private static Info analyze(ItemStack stack, LocalPlayer player, TacHudConfig.AmmoHud cfg) {

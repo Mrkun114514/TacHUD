@@ -1,5 +1,6 @@
 package com.mrkun.tachud.client.hud;
 
+import com.mrkun.tachud.client.hud.HudScale;
 import com.mrkun.tachud.config.TacHudConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
@@ -21,6 +22,7 @@ public final class LowHealthOverlay {
         if (!lh.enabled) return;
         if (player.isSpectator() || player.getAbilities().invulnerable) return;
 
+        double f = HudScale.factor(height, cfg);
         float health = player.getHealth();
         double threshold = Math.max(0.5, lh.thresholdHp);
         if (health <= 0f || health > threshold) return;
@@ -37,7 +39,7 @@ public final class LowHealthOverlay {
         int edge = Draw.withAlpha(baseRgb, alpha);
         int clear = baseRgb; // alpha 0
 
-        int depth = Math.max(6, (int) (Math.min(width, height) * lh.depthFraction));
+        int depth = Math.max(6, (int) (Math.min(width, height) * lh.depthFraction * f));
 
         // Top and bottom use Vanilla's vertical gradient.
         g.fillGradient(0, 0, width, depth, edge, clear);

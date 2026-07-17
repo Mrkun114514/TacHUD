@@ -19,6 +19,20 @@ public class TacHudConfig {
     public Compass compass = new Compass();
     public HitMarker hitMarker = new HitMarker();
 
+    /** Global HUD size multiplier. Combined with an auto screen-height fit
+     *  factor (see {@code HudScale}) so the HUD automatically scales to
+     *  the interface size. 1.0 = default. */
+    public double uiScale = 1.0;
+
+    /** Hit / kill sound effects. */
+    public HitSound hitSound = new HitSound();
+
+    /** Kill-confirmation flourish (center-screen "KILL" + streak). */
+    public KillConfirm killConfirm = new KillConfirm();
+
+    /** XP gain popup shown just below the crosshair (mainly XP orbs). */
+    public XpPop xpPop = new XpPop();
+
     // ---- Low-health warning (red screen-edge vignette) ---------------------
     public static class LowHealth {
         public boolean enabled = true;
@@ -89,6 +103,53 @@ public class TacHudConfig {
         public int durationMs = 260;
         public String color = "#FFFFFFFF";
         public String killColor = "#FFFF2A25";
+    }
+
+    // ---- Hit / kill sound effects ----------------------------------------
+    public static class HitSound {
+        public boolean enabled = true;
+        /**
+         * Sound played on every landed hit, as a {@code <namespace>:<path>}
+         * ResourceLocation. Vanilla sounds work out of the box, e.g.
+         * {@code minecraft:block.note_block.hat}. A custom mod sound can be
+         * used if it is registered in a {@code sounds.json}.
+         */
+        public String sound = "minecraft:block.note_block.hat";
+        public float volume = 0.7f;
+        public float pitch = 1.0f;
+        /** Play a distinct sound on the killing blow. */
+        public boolean killDistinct = true;
+        public String killSound = "minecraft:block.note_block.bass";
+    }
+
+    // ---- Kill confirmation (center-screen flourish) --------------------
+    public static class KillConfirm {
+        public boolean enabled = true;
+        /** Relative size multiplier for the flourish. */
+        public double size = 1.0;
+        /** How long the flourish stays visible, in milliseconds. */
+        public int durationMs = 900;
+        /** Show the running kill streak (e.g. x3) after the label. */
+        public boolean showKillstreak = true;
+        /** Milliseconds without a kill before the streak resets to 0. */
+        public int streakResetMs = 4000;
+        public String color = "#FFFF2A25";
+        /** Text shown on kill; empty falls back to "KILL". */
+        public String text = "KILL";
+    }
+
+    // ---- XP gain popup (below the crosshair) -------------------------
+    public static class XpPop {
+        public boolean enabled = true;
+        /** Relative size multiplier. */
+        public double size = 1.0;
+        /** How long the "+N XP" stays fully visible, in milliseconds. */
+        public int holdMs = 1100;
+        /** Fade-out duration, in milliseconds. */
+        public int fadeMs = 450;
+        public String color = "#FF7CFC00";
+        /** Also display the instantaneous gain rate as "XP/s". */
+        public boolean showRate = true;
     }
 
     /** Parse an ARGB hex string like {@code #FFFF2A25}; falls back on error. */

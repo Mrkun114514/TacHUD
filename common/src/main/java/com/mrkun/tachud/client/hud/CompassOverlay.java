@@ -1,5 +1,6 @@
 package com.mrkun.tachud.client.hud;
 
+import com.mrkun.tachud.client.hud.HudScale;
 import com.mrkun.tachud.config.TacHudConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -23,15 +24,16 @@ public final class CompassOverlay {
         if (!c.enabled) return;
 
         Font font = mc.font;
+        double f = HudScale.factor(height, cfg);
         float heading = (player.getYRot() + 180f) % 360f;
         if (heading < 0) heading += 360f;
 
         int cx = width / 2;
-        int halfW = Math.max(20, c.width / 2);
+        int halfW = Math.max(20, (int) (c.width * f / 2.0));
         int x1 = cx - halfW;
         int x2 = cx + halfW;
-        int y1 = c.marginY;
-        int barH = 17;
+        int y1 = (int) (c.marginY * f);
+        int barH = (int) (17.0 * f);
         int y2 = y1 + barH;
 
         int color = TacHudConfig.argb(c.color, 0xFFFFFFFF);
@@ -66,7 +68,7 @@ public final class CompassOverlay {
 
         // Numeric heading readout, centered under the strip.
         String hdg = String.format("%03d", Math.round(heading) % 360);
-        g.drawCenteredString(font, hdg, cx, y2 + 2, accent);
+        g.drawCenteredString(font, hdg, cx, y2 + (int) (2.0 * f), accent);
     }
 
     private static String labelFor(int deg) {

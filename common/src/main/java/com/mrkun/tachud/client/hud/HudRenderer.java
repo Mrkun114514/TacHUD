@@ -1,5 +1,7 @@
 package com.mrkun.tachud.client.hud;
 
+import com.mrkun.tachud.client.hud.KillConfirmOverlay;
+import com.mrkun.tachud.client.hud.XpPopOverlay;
 import com.mrkun.tachud.config.ConfigManager;
 import com.mrkun.tachud.config.TacHudConfig;
 import net.minecraft.client.Minecraft;
@@ -35,5 +37,7 @@ public final class HudRenderer {
         CompassOverlay.render(graphics, mc, player, cfg, width, height);
         KillFeedOverlay.render(graphics, mc, cfg, width, height, now);
         HitMarkerOverlay.render(graphics, cfg, width, height, now);
+        KillConfirmOverlay.render(graphics, mc, cfg, width, height, now);
+        XpPopOverlay.render(graphics, mc, cfg, width, height, now);
     }
 }

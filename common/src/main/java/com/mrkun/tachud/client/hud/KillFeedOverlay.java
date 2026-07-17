@@ -1,5 +1,6 @@
 package com.mrkun.tachud.client.hud;
 
+import com.mrkun.tachud.client.hud.HudScale;
 import com.mrkun.tachud.config.TacHudConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -37,6 +38,7 @@ public final class KillFeedOverlay {
         TacHudConfig.KillFeed kf = cfg.killFeed;
         if (!kf.enabled) return;
 
+        double f = HudScale.factor(height, cfg);
         long life = kf.holdMs + 2L * kf.fadeMs;
         Font font = mc.font;
         int playerColor = TacHudConfig.argb(kf.playerColor, 0xFFFF4D4D);
@@ -45,7 +47,7 @@ public final class KillFeedOverlay {
         synchronized (ENTRIES) {
             ENTRIES.removeIf(e -> now - e.created > life);
 
-            int y = kf.marginY;
+            int y = (int) (kf.marginY * f);
             int shown = 0;
             for (Entry e : ENTRIES) {
                 if (shown >= kf.maxEntries) break;
@@ -53,7 +55,7 @@ public final class KillFeedOverlay {
                 if (alpha <= 0.02f) continue;
 
                 int color = e.isPlayer() ? playerColor : mobColor;
-                drawEntry(g, font, e.name(), color, width, y, kf.marginX, alpha);
+                drawEntry(g, font, e.name(), color, width, y, (int) (kf.marginX * f), alpha);
                 y += font.lineHeight + 5;
                 shown++;
             }
