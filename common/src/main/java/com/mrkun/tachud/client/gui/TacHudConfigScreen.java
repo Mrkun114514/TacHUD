@@ -130,6 +130,8 @@ public final class TacHudConfigScreen extends Screen {
                 addNumber("生命值高度", () -> cfg.vanillaHud.healthHeight, v -> cfg.vanillaHud.healthHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
                 addNumber("护甲值高度", () -> cfg.vanillaHud.armorHeight, v -> cfg.vanillaHud.armorHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
                 addNumber("氧气值高度", () -> cfg.vanillaHud.airHeight, v -> cfg.vanillaHud.airHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("饥饿值高度", () -> cfg.vanillaHud.hungerHeight, v -> cfg.vanillaHud.hungerHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("饱和度高度", () -> cfg.vanillaHud.saturationHeight, v -> cfg.vanillaHud.saturationHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
 
                 addNumber("生命值偏移X", () -> cfg.vanillaHud.healthOffsetX, v -> cfg.vanillaHud.healthOffsetX = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
                 addNumber("生命值偏移Y", () -> cfg.vanillaHud.healthOffsetY, v -> cfg.vanillaHud.healthOffsetY = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
