@@ -1,5 +1,7 @@
 package com.mrkun.tachud.fabric.mixin;
 
+import com.mrkun.tachud.config.ConfigManager;
+import com.mrkun.tachud.config.TacHudConfig;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
@@ -9,24 +11,32 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Cancels vanilla rendering of health / armour / food / XP bars whenever
+ * Cancels vanilla rendering of health / armour / food / air / XP bars whenever
  * TacHUD's {@code vanillaHud} replacement is active, so only our COD‑style
  * bars (rendered by {@code VanillaHudOverlay}) appear.
- *
- * <p><b>Currently disabled</b> — HUD beautification has been fully reverted.
- * The mixins remain in place (compiles cleanly) but {@link #isActive()} always
- * returns {@code false}, so vanilla rendering is never interrupted.
  */
 @Mixin(Gui.class)
 public class GuiMixin {
 
     private static boolean isActive() {
-        // Disabled — HUD beautification fully reverted.
-        return false;
+        TacHudConfig cfg = ConfigManager.get();
+        return cfg.masterEnabled && cfg.vanillaHud.enabled;
     }
 
     private static boolean isFoodCancelled() {
-        return false;
+        TacHudConfig cfg = ConfigManager.get();
+        return cfg.masterEnabled && cfg.vanillaHud.enabled
+                && cfg.vanillaHud.hungerEnabled
+                && (!cfg.vanillaHud.autoHunger || !isAppleskinLoaded());
+    }
+
+    private static boolean isAppleskinLoaded() {
+        try {
+            Class.forName("squeek.appleskin.AppleSkin");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     // ── Health hearts ───────────────────────────────────────────────────
@@ -51,5 +61,15 @@ public class GuiMixin {
     private void tachud$cancelFood(GuiGraphics graphics, Player player,
                                    int i, int j, CallbackInfo ci) {
         if (isFoodCancelled()) ci.cancel();
+    }
+
+    // ── Air bubbles ────────────────────────────────────────────────────
+
+    @Inject(method = "renderAir", at = @At("HEAD"), cancellable = true)
+    private void tachud$cancelAir(GuiGraphics graphics, CallbackInfo ci) {
+        TacHudConfig cfg = ConfigManager.get();
+        if (cfg.masterEnabled && cfg.vanillaHud.enabled && cfg.vanillaHud.airEnabled) {
+            ci.cancel();
+        }
     }
 }

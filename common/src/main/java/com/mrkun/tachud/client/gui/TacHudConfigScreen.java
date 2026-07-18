@@ -28,9 +28,11 @@ import java.util.function.Supplier;
 public final class TacHudConfigScreen extends Screen {
 
     private static final String[] TABS = {"通用", "命中音效", "击杀反馈", "经验弹出", "HUD美化", "模块开关"};
-    private static final int ROW_STEP = 30;
-    private static final int COL_X = 40;
-    private static final int CTRL_X = 280;
+    private static final int ROW_STEP = 26;
+    private static final int COL_X = 30;
+    private static final int CTRL_X = 200;
+    private static final int COL2_X = 340;
+    private static final int CTRL2_X = 510;
 
     private final Screen parent;
     private final TacHudConfig cfg = ConfigManager.get();
@@ -104,18 +106,41 @@ public final class TacHudConfigScreen extends Screen {
                 addColor("颜色", () -> cfg.xpPop.color, v -> cfg.xpPop.color = v, x, y); y += ROW_STEP;
             }
             case 4 -> { // HUD美化 / COD-style corner bars
+                int y2 = 64;
                 addToggle("替换原版 HUD", () -> cfg.vanillaHud.enabled, v -> cfg.vanillaHud.enabled = v, x, y); y += ROW_STEP;
-                addToggle("  生命值美化 (左下)", () -> cfg.vanillaHud.healthEnabled, v -> cfg.vanillaHud.healthEnabled = v, x, y); y += ROW_STEP;
-                addToggle("  护甲值美化 (左下)", () -> cfg.vanillaHud.armorEnabled, v -> cfg.vanillaHud.armorEnabled = v, x, y); y += ROW_STEP;
-                addToggle("  饥饿/饱和度 (右下)", () -> cfg.vanillaHud.hungerEnabled, v -> cfg.vanillaHud.hungerEnabled = v, x, y); y += ROW_STEP;
+                addToggle("  生命值美化", () -> cfg.vanillaHud.healthEnabled, v -> cfg.vanillaHud.healthEnabled = v, x, y); y += ROW_STEP;
+                addToggle("  护甲值美化", () -> cfg.vanillaHud.armorEnabled, v -> cfg.vanillaHud.armorEnabled = v, x, y); y += ROW_STEP;
+                addToggle("  氧气值美化", () -> cfg.vanillaHud.airEnabled, v -> cfg.vanillaHud.airEnabled = v, x, y); y += ROW_STEP;
+                addToggle("  饥饿/饱和度", () -> cfg.vanillaHud.hungerEnabled, v -> cfg.vanillaHud.hungerEnabled = v, x, y); y += ROW_STEP;
                 addToggle("  AppleSkin兼容", () -> cfg.vanillaHud.autoHunger, v -> cfg.vanillaHud.autoHunger = v, x, y); y += ROW_STEP;
-                addToggle("  经验条分段(实验)", () -> cfg.vanillaHud.xpBarEnabled, v -> cfg.vanillaHud.xpBarEnabled = v, x, y); y += ROW_STEP;
-                addNumber("条宽度", () -> cfg.vanillaHud.barWidth, v -> cfg.vanillaHud.barWidth = v, 80.0, 300.0, x, y); y += ROW_STEP;
-                addInt("底部边距", () -> (int) cfg.vanillaHud.marginBottom, v -> cfg.vanillaHud.marginBottom = v, 4, 40, x, y); y += ROW_STEP;
-                addColor("健康色", () -> cfg.vanillaHud.healthColor, v -> cfg.vanillaHud.healthColor = v, x, y); y += ROW_STEP;
-                addColor("护甲色", () -> cfg.vanillaHud.armorColor, v -> cfg.vanillaHud.armorColor = v, x, y); y += ROW_STEP;
-                addColor("饥饿色", () -> cfg.vanillaHud.hungerColor, v -> cfg.vanillaHud.hungerColor = v, x, y); y += ROW_STEP;
-                addColor("饱和度色", () -> cfg.vanillaHud.saturationColor, v -> cfg.vanillaHud.saturationColor = v, x, y); y += ROW_STEP;
+                addToggle("  经验条分段", () -> cfg.vanillaHud.xpBarEnabled, v -> cfg.vanillaHud.xpBarEnabled = v, x, y); y += ROW_STEP;
+
+                addColor("生命值颜色", () -> cfg.vanillaHud.healthColor, v -> cfg.vanillaHud.healthColor = v, x, y); y += ROW_STEP;
+                addColor("护甲值颜色", () -> cfg.vanillaHud.armorColor, v -> cfg.vanillaHud.armorColor = v, x, y); y += ROW_STEP;
+                addColor("氧气值颜色", () -> cfg.vanillaHud.airColor, v -> cfg.vanillaHud.airColor = v, x, y); y += ROW_STEP;
+                addColor("饥饿值颜色", () -> cfg.vanillaHud.hungerColor, v -> cfg.vanillaHud.hungerColor = v, x, y); y += ROW_STEP;
+                addColor("饱和度颜色", () -> cfg.vanillaHud.saturationColor, v -> cfg.vanillaHud.saturationColor = v, x, y); y += ROW_STEP;
+
+                addNumber("生命值宽度", () -> cfg.vanillaHud.healthWidth, v -> cfg.vanillaHud.healthWidth = v, 40.0, 300.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("护甲值宽度", () -> cfg.vanillaHud.armorWidth, v -> cfg.vanillaHud.armorWidth = v, 40.0, 300.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("氧气值宽度", () -> cfg.vanillaHud.airWidth, v -> cfg.vanillaHud.airWidth = v, 40.0, 300.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("饥饿值宽度", () -> cfg.vanillaHud.hungerWidth, v -> cfg.vanillaHud.hungerWidth = v, 40.0, 300.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("饱和度宽度", () -> cfg.vanillaHud.saturationWidth, v -> cfg.vanillaHud.saturationWidth = v, 40.0, 300.0, COL2_X, y2); y2 += ROW_STEP;
+
+                addNumber("生命值高度", () -> cfg.vanillaHud.healthHeight, v -> cfg.vanillaHud.healthHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("护甲值高度", () -> cfg.vanillaHud.armorHeight, v -> cfg.vanillaHud.armorHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("氧气值高度", () -> cfg.vanillaHud.airHeight, v -> cfg.vanillaHud.airHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
+
+                addNumber("生命值偏移X", () -> cfg.vanillaHud.healthOffsetX, v -> cfg.vanillaHud.healthOffsetX = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("生命值偏移Y", () -> cfg.vanillaHud.healthOffsetY, v -> cfg.vanillaHud.healthOffsetY = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("护甲值偏移X", () -> cfg.vanillaHud.armorOffsetX, v -> cfg.vanillaHud.armorOffsetX = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("护甲值偏移Y", () -> cfg.vanillaHud.armorOffsetY, v -> cfg.vanillaHud.armorOffsetY = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("氧气值偏移X", () -> cfg.vanillaHud.airOffsetX, v -> cfg.vanillaHud.airOffsetX = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("氧气值偏移Y", () -> cfg.vanillaHud.airOffsetY, v -> cfg.vanillaHud.airOffsetY = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("饥饿值偏移X", () -> cfg.vanillaHud.hungerOffsetX, v -> cfg.vanillaHud.hungerOffsetX = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("饥饿值偏移Y", () -> cfg.vanillaHud.hungerOffsetY, v -> cfg.vanillaHud.hungerOffsetY = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("饱和度偏移X", () -> cfg.vanillaHud.saturationOffsetX, v -> cfg.vanillaHud.saturationOffsetX = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("饱和度偏移Y", () -> cfg.vanillaHud.saturationOffsetY, v -> cfg.vanillaHud.saturationOffsetY = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
             }
             case 5 -> { // 模块开关 / Modules
                 addToggle("低血量警示", () -> cfg.lowHealth.enabled, v -> cfg.lowHealth.enabled = v, x, y); y += ROW_STEP;

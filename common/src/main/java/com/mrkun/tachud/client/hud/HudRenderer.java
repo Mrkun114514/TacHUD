@@ -58,6 +58,8 @@ public final class HudRenderer {
         CompassOverlay.render(graphics, mc, player, cfg, width, height);
         KillFeedOverlay.render(graphics, mc, cfg, width, height, now);
 
+        // COD-style replacement for vanilla health/armor/hunger/saturation bars.
+        VanillaHudOverlay.render(graphics, mc, cfg, width, height, now);
     }
 
     // ---- ReDeploy detection (runtime, zero compile dep) ------------------
