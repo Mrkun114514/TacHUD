@@ -33,6 +33,10 @@ public class TacHudConfig {
     /** XP gain popup shown just below the crosshair (mainly XP orbs). */
     public XpPop xpPop = new XpPop();
 
+    // ---- Vanilla-HUD replacement (COD-style health/armor/food/XP) --------
+    /** Controls for the COD-military-style replacement of vanilla HUD bars. */
+    public VanillaHud vanillaHud = new VanillaHud();
+
     // ---- Low-health warning (red screen-edge vignette) ---------------------
     public static class LowHealth {
         public boolean enabled = true;
@@ -150,6 +154,40 @@ public class TacHudConfig {
         public String color = "#FF7CFC00";
         /** Also display the instantaneous gain rate as "XP/s". */
         public boolean showRate = true;
+    }
+
+    // ---- Vanilla-HUD replacement (COD-style bars) ------------------------
+    public static class VanillaHud {
+        public boolean enabled = true;
+        /** Replace health hearts with a compact COD-style bar. */
+        public boolean healthEnabled = true;
+        /** Replace armor icons with a thin blue bar above the health bar. */
+        public boolean armorEnabled = true;
+        /** Replace hunger drumsticks with a brown segmented bar. */
+        public boolean hungerEnabled = true;
+        /** Replace the continuous XP bar with a segmented COD-style bar. */
+        public boolean xpBarEnabled = true;
+        /** Auto-disabled when AppleSkin is detected (set false at runtime). */
+        public boolean autoHunger = true;
+
+        // ---- Appearance defaults ----------------------------------------
+        public double barWidth = 180.0;          // total bar width in pixels
+        public double marginBottom = 20.0;       // distance from bottom edge
+        public double healthHeight = 6.0;        // health bar thickness
+        public double armorHeight = 4.0;         // armor bar thickness
+        public double segmentGap = 2.0;          // gap between segments
+        public int healthSegments = 5;           // number of health segments
+        public int hungerSegments = 6;           // hunger bar segments
+        public int xpSegments = 5;               // XP bar segments
+        public String healthColor = "#FFCC0000";
+        public String healthBgColor = "#55000000";
+        public String armorColor = "#FF3CB4FF";
+        public String armorBgColor = "#55333333";
+        public String hungerColor = "#FFC49C48";
+        public String hungerBgColor = "#55222222";
+        public String saturationColor = "#55FFD700"; // golden overlay
+        public String xpColor = "#FF00FF00";
+        public String xpBgColor = "#3300AA00";
     }
 
     /** Parse an ARGB hex string like {@code #FFFF2A25}; falls back on error. */

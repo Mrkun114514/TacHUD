@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.mrkun.tachud.fabric.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "GuiMixin",
+    "ContextualBarRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

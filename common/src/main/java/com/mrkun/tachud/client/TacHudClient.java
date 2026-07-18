@@ -5,6 +5,7 @@ import com.mrkun.tachud.TacHud;
 import com.mrkun.tachud.client.gui.TacHudConfigScreen;
 import com.mrkun.tachud.client.hud.HudRenderer;
 import com.mrkun.tachud.client.hud.KillFeedOverlay;
+import com.mrkun.tachud.client.hud.VanillaHudOverlay;
 import com.mrkun.tachud.config.ConfigManager;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
@@ -87,6 +88,7 @@ public final class TacHudClient {
             hintShown = true;
             mc.player.displayClientMessage(
                     Component.literal("§a[TacHUD] §f按 G 打开设置，按 R 重载配置"), true);
+            VanillaHudOverlay.showAppleSkinWarning(mc);
         }
 
         // ---- ReDeploy integration: death / respawn notifications ----------

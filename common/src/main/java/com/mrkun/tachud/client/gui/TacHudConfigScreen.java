@@ -27,7 +27,7 @@ import java.util.function.Supplier;
  */
 public final class TacHudConfigScreen extends Screen {
 
-    private static final String[] TABS = {"通用", "命中音效", "击杀反馈", "经验弹出", "模块开关"};
+    private static final String[] TABS = {"通用", "命中音效", "击杀反馈", "经验弹出", "HUD美化", "模块开关"};
     private static final int ROW_STEP = 30;
     private static final int COL_X = 40;
     private static final int CTRL_X = 280;
@@ -103,7 +103,20 @@ public final class TacHudConfigScreen extends Screen {
                 addToggle("显示 XP/s", () -> cfg.xpPop.showRate, v -> cfg.xpPop.showRate = v, x, y); y += ROW_STEP;
                 addColor("颜色", () -> cfg.xpPop.color, v -> cfg.xpPop.color = v, x, y); y += ROW_STEP;
             }
-            case 4 -> { // 模块开关 / Modules
+            case 4 -> { // HUD美化 / Vanilla‑replacement bars
+                addToggle("替换原版 HUD", () -> cfg.vanillaHud.enabled, v -> cfg.vanillaHud.enabled = v, x, y); y += ROW_STEP;
+                addToggle("  生命值美化", () -> cfg.vanillaHud.healthEnabled, v -> cfg.vanillaHud.healthEnabled = v, x, y); y += ROW_STEP;
+                addToggle("  护甲值美化", () -> cfg.vanillaHud.armorEnabled, v -> cfg.vanillaHud.armorEnabled = v, x, y); y += ROW_STEP;
+                addToggle("  饥饿/饱和度美化", () -> cfg.vanillaHud.hungerEnabled, v -> cfg.vanillaHud.hungerEnabled = v, x, y); y += ROW_STEP;
+                addToggle("  经验条分段", () -> cfg.vanillaHud.xpBarEnabled, v -> cfg.vanillaHud.xpBarEnabled = v, x, y); y += ROW_STEP;
+                addNumber("条宽度", () -> cfg.vanillaHud.barWidth, v -> cfg.vanillaHud.barWidth = v, 80.0, 400.0, x, y); y += ROW_STEP;
+                addInt("底部边距", () -> (int) cfg.vanillaHud.marginBottom, v -> cfg.vanillaHud.marginBottom = v, 5, 80, x, y); y += ROW_STEP;
+                addColor("健康色", () -> cfg.vanillaHud.healthColor, v -> cfg.vanillaHud.healthColor = v, x, y); y += ROW_STEP;
+                addColor("护甲色", () -> cfg.vanillaHud.armorColor, v -> cfg.vanillaHud.armorColor = v, x, y); y += ROW_STEP;
+                addColor("饥饿色", () -> cfg.vanillaHud.hungerColor, v -> cfg.vanillaHud.hungerColor = v, x, y); y += ROW_STEP;
+                addColor("经验色", () -> cfg.vanillaHud.xpColor, v -> cfg.vanillaHud.xpColor = v, x, y); y += ROW_STEP;
+            }
+            case 5 -> { // 模块开关 / Modules
                 addToggle("低血量警示", () -> cfg.lowHealth.enabled, v -> cfg.lowHealth.enabled = v, x, y); y += ROW_STEP;
                 addNumber("低血阈值 (HP)", () -> cfg.lowHealth.thresholdHp, v -> cfg.lowHealth.thresholdHp = v, 1.0, 20.0, x, y); y += ROW_STEP;
                 addToggle("击杀信息流", () -> cfg.killFeed.enabled, v -> cfg.killFeed.enabled = v, x, y); y += ROW_STEP;

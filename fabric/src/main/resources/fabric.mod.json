@@ -9,8 +9,10 @@
   "environment": "*",
   "entrypoints": {
     "main": ["com.mrkun.tachud.fabric.TacHudFabric"],
-    "client": ["com.mrkun.tachud.fabric.client.TacHudFabricClient"]
+    "client": ["com.mrkun.tachud.fabric.client.TacHudFabricClient"],
+    "modmenu": ["com.mrkun.tachud.fabric.client.TacHudModMenuIntegration"]
   },
+  "mixins": ["tachud.mixins.json"],
   "depends": {
     "fabricloader": ">=0.16",
     "minecraft": ">=1.21 <1.22",
