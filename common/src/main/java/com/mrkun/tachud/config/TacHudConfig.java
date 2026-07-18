@@ -156,38 +156,38 @@ public class TacHudConfig {
         public boolean showRate = true;
     }
 
-    // ---- Vanilla-HUD replacement (COD-style bars) ------------------------
+    // ---- Vanilla-HUD replacement (COD-style corner bars) ----------------
     public static class VanillaHud {
         public boolean enabled = true;
-        /** Replace health hearts with a compact COD-style bar. */
+        /** Replace health hearts with a compact COD-style bar (bottom-left). */
         public boolean healthEnabled = true;
         /** Replace armor icons with a thin blue bar above the health bar. */
         public boolean armorEnabled = true;
-        /** Replace hunger drumsticks with a brown segmented bar. */
+        /** Replace hunger drumsticks with a brown bar (bottom-right). */
         public boolean hungerEnabled = true;
-        /** Replace the continuous XP bar with a segmented COD-style bar. */
-        public boolean xpBarEnabled = true;
-        /** Auto-disabled when AppleSkin is detected (set false at runtime). */
+        /** Replace the XP progress bar with a segmented line (experimental). */
+        public boolean xpBarEnabled = false;
+        /** Auto-disable hunger/saturation when AppleSkin is detected. */
         public boolean autoHunger = true;
 
         // ---- Appearance defaults ----------------------------------------
-        public double barWidth = 180.0;          // total bar width in pixels
-        public double marginBottom = 20.0;       // distance from bottom edge
-        public double healthHeight = 6.0;        // health bar thickness
-        public double armorHeight = 4.0;         // armor bar thickness
-        public double segmentGap = 2.0;          // gap between segments
+        public double barWidth = 160.0;          // total bar width in pixels
+        public double marginBottom = 14.0;       // distance from bottom edge
+        public double healthHeight = 8.0;        // health bar thickness
+        public double armorHeight = 5.0;         // armor bar thickness
+        public double segmentGap = 2.0;          // gap between bar and armor
         public int healthSegments = 5;           // number of health segments
         public int hungerSegments = 6;           // hunger bar segments
         public int xpSegments = 5;               // XP bar segments
         public String healthColor = "#FFCC0000";
-        public String healthBgColor = "#55000000";
+        public String healthBgColor = "#FF3A1515";
         public String armorColor = "#FF3CB4FF";
-        public String armorBgColor = "#55333333";
+        public String armorBgColor = "#FF1A2A3A";
         public String hungerColor = "#FFC49C48";
-        public String hungerBgColor = "#55222222";
-        public String saturationColor = "#55FFD700"; // golden overlay
-        public String xpColor = "#FF00FF00";
-        public String xpBgColor = "#3300AA00";
+        public String hungerBgColor = "#FF3A2A15";
+        public String saturationColor = "#FFFFD700"; // golden bar (above hunger)
+        public String xpColor = "#FF7CFC00";
+        public String xpBgColor = "#FF0A2A0A";
     }
 
     /** Parse an ARGB hex string like {@code #FFFF2A25}; falls back on error. */

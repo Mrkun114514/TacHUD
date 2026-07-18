@@ -9,11 +9,22 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 
 /**
- * COD‑military‑style replacement for the vanilla health / armour / hunger /
- * saturation / XP bars.
+ * COD-military-style replacement for the vanilla health / armour / hunger /
+ * saturation bars.
  *
- * <p>AppleSkin auto‑detect: when {@code appleskin} is loaded this overlay
- * suppresses the hunger + saturation bars and shows a one‑time chat hint.
+ * <p>Layout (COD-style corner placement):
+ * <ul>
+ *   <li>Bottom-left:  armour bar (thin, above) + health bar (below)</li>
+ *   <li>Bottom-right: saturation bar (golden, above) + hunger bar (below)</li>
+ *   <li>XP bar (optional, disabled by default): thin segmented line at the
+ *       very bottom edge of the screen, full hotbar width.</li>
+ * </ul>
+ *
+ * <p>All bars stay in the screen corners — they never extend into the chat
+ * area (bottom-left) or the hotbar area (bottom-center).
+ *
+ * <p>AppleSkin auto-detect: when {@code appleskin} is loaded the hunger +
+ * saturation bars are suppressed and a one-time chat hint is shown.
  */
 public final class VanillaHudOverlay {
 
@@ -25,8 +36,8 @@ public final class VanillaHudOverlay {
     }
 
     /**
-     * Main entry — draw all custom vanilla‑style bars. Call every frame from
-     * {@link HudRenderer} after all TacHUD‑specific overlays.
+     * Main entry — draw all custom COD-style bars. Call every frame from
+     * {@link HudRenderer} after all TacHUD-specific overlays.
      */
     public static void render(GuiGraphics g, Minecraft mc, TacHudConfig cfg,
                               int width, int height, long now) {
@@ -39,75 +50,84 @@ public final class VanillaHudOverlay {
 
         double f = HudScale.factor(height, cfg);
         int barW = (int) (vh.barWidth * f);
-        int gap = (int) (vh.segmentGap * f);
-        int sideMargin = 8;   // offset from screen edge
+        int sideMargin = Math.max(2, (int) (6 * f));
+        int healthH = Math.max(2, (int) (vh.healthHeight * f));
+        int armorH = Math.max(2, (int) (vh.armorHeight * f));
+        int gap = Math.max(1, (int) (2 * f));
+        int bottomMargin = Math.max(2, (int) (vh.marginBottom * f));
+        int textOff = Math.max(3, (int) (4 * f));
 
-        int bottom = height - (int) (vh.marginBottom * f);
-        int healthH = (int) (vh.healthHeight * f);
-        int armorH = vh.armorEnabled && p.getArmorValue() > 0
-                ? (int) (vh.armorHeight * f) : 0;
+        // ── Y positions ────────────────────────────────────────────────
+        // Health at the very bottom; armour directly above it (COD style).
+        int healthY = height - bottomMargin - healthH;
+        int armorY  = healthY - gap - armorH;
+        // Right side mirrors left.
+        int hungerY = healthY;
+        int satY    = armorY;
 
-        // ── Left side: health + armour ──────────────────────────────────
+        // ── Left side: armour (above) + health (below) ─────────────────
         int leftX = sideMargin;
-        int healthY = bottom - healthH;
-        int armorY = healthY - armorH - gap;
 
-        // Armour bar (above health)
-        if (armorH > 0 && vh.armorEnabled) {
-            int maxArmor = 20;
-            float armorRatio = Math.min(1f, p.getArmorValue() / (float) maxArmor);
-            drawSegmentedBar(g, leftX, armorY, barW, armorH, gap,
-                    armorRatio, 4, // armour uses 4 segments (5HP each)
-                    TacHudConfig.argb(vh.armorColor, 0xFF3CB4FF),
-                    TacHudConfig.argb(vh.armorBgColor, 0x55333333));
+        if (vh.armorEnabled && p.getArmorValue() > 0) {
+            float armorRatio = Math.min(1f, p.getArmorValue() / 20f);
+            int armorClr  = TacHudConfig.argb(vh.armorColor, 0xFF3CB4FF);
+            int armorBg   = TacHudConfig.argb(vh.armorBgColor, 0xFF1A2A3A);
+            drawTacticalBar(g, leftX, armorY, barW, armorH,
+                    armorRatio, 4, armorClr, armorBg);
+            g.drawString(mc.font, String.valueOf((int) p.getArmorValue()),
+                    leftX + barW + textOff, armorY - 1, armorClr, false);
         }
 
-        // Health bar
-        float healthRatio = Math.max(0f, p.getHealth() / p.getMaxHealth());
-        int healthClr = TacHudConfig.argb(vh.healthColor, 0xFFCC0000);
-        int healthBg = TacHudConfig.argb(vh.healthBgColor, 0x55000000);
-        drawSegmentedBar(g, leftX, healthY, barW, healthH, gap,
-                healthRatio, vh.healthSegments, healthClr, healthBg);
+        if (vh.healthEnabled) {
+            float healthRatio = Math.max(0f, p.getHealth() / p.getMaxHealth());
+            int hpClr  = TacHudConfig.argb(vh.healthColor, 0xFFCC0000);
+            int hpBg   = TacHudConfig.argb(vh.healthBgColor, 0xFF3A1515);
+            drawTacticalBar(g, leftX, healthY, barW, healthH,
+                    healthRatio, vh.healthSegments, hpClr, hpBg);
+            String hpText = (int) p.getHealth() + "/" + (int) p.getMaxHealth();
+            g.drawString(mc.font, hpText,
+                    leftX + barW + textOff, healthY - 1, hpClr, false);
+        }
 
-        // ── Right side: hunger + saturation ────────────────────────────
+        // ── Right side: saturation (above) + hunger (below) ────────────
         if (!appleskinLoaded && vh.autoHunger && vh.hungerEnabled) {
-            int rightX = width - barW - sideMargin;
-            int hungerH = healthH;
-            int foodY = bottom - healthH;
+            int rightX = width - sideMargin - barW;
 
-            float hungerRatio = Math.min(1f, p.getFoodData().getFoodLevel() / 20f);
-            float satRatio = Math.min(1f, p.getFoodData().getSaturationLevel() / 20f);
-
-            int hColor = TacHudConfig.argb(vh.hungerColor, 0xFFC49C48);
-            int hBg = TacHudConfig.argb(vh.hungerBgColor, 0x55222222);
-
-            // Hunger bar
-            drawSegmentedBar(g, rightX, foodY, barW, hungerH, gap,
-                    hungerRatio, vh.hungerSegments, hColor, hBg);
-
-            // Saturation overlay (golden, drawn on top)
+            // Saturation bar (golden, above hunger)
+            float satRatio = Math.min(1f,
+                    p.getFoodData().getSaturationLevel() / 20f);
             if (satRatio > 0.01f) {
-                int satClr = TacHudConfig.argb(vh.saturationColor, 0x55FFD700);
-                drawSegmentedBar(g, rightX, foodY, barW, hungerH, gap,
-                        satRatio, vh.hungerSegments, satClr, 0x00000000);
+                int satClr = TacHudConfig.argb(vh.saturationColor, 0xFFFFD700);
+                int satBg  = TacHudConfig.argb(vh.hungerBgColor, 0xFF3A3015);
+                drawTacticalBar(g, rightX, satY, barW, armorH,
+                        satRatio, vh.hungerSegments, satClr, satBg);
             }
+
+            // Hunger bar (below)
+            float hungerRatio = Math.min(1f,
+                    p.getFoodData().getFoodLevel() / 20f);
+            int hClr = TacHudConfig.argb(vh.hungerColor, 0xFFC49C48);
+            int hBg  = TacHudConfig.argb(vh.hungerBgColor, 0xFF3A2A15);
+            drawTacticalBar(g, rightX, hungerY, barW, healthH,
+                    hungerRatio, vh.hungerSegments, hClr, hBg);
+            String foodText = String.valueOf(p.getFoodData().getFoodLevel());
+            g.drawString(mc.font, foodText,
+                    rightX - textOff - mc.font.width(foodText),
+                    hungerY - 1, hClr, false);
         }
 
-        // ── XP bar (centered, below hotbar area) ───────────────────────
-        if (vh.xpBarEnabled && p.totalExperience > 0) {
-            int xpW = (int) (vh.barWidth * f * 1.2);
-            int xpH = (int) (vh.healthHeight * f * 0.8);
-            int xpBottom = healthY - armorH - (int) (12 * f);
+        // ── XP bar (optional, at very bottom edge) ─────────────────────
+        if (vh.xpBarEnabled) {
+            int hotbarW = (int) (182 * f);
+            int xpW = hotbarW;
             int xpX = width / 2 - xpW / 2;
+            int xpH = Math.max(2, (int) (3 * f));
+            int xpY = height - xpH;
 
-            int xpFull = p.getXpNeededForNextLevel();
-            float xpRatio = xpFull > 0
-                    ? Math.min(1f, p.totalExperience / (float) xpFull)
-                    : p.experienceProgress;
-
-            int xpClr = TacHudConfig.argb(vh.xpColor, 0xFF00FF00);
-            int xpBg = TacHudConfig.argb(vh.xpBgColor, 0x3300AA00);
-            drawSegmentedBar(g, xpX, xpBottom, xpW, xpH, (int) (gap * 0.8),
+            float xpRatio = Math.min(1f, Math.max(0f, p.experienceProgress));
+            int xpClr = TacHudConfig.argb(vh.xpColor, 0xFF7CFC00);
+            int xpBg  = TacHudConfig.argb(vh.xpBgColor, 0xFF0A2A0A);
+            drawTacticalBar(g, xpX, xpY, xpW, xpH,
                     xpRatio, vh.xpSegments, xpClr, xpBg);
         }
     }
@@ -122,10 +142,6 @@ public final class VanillaHudOverlay {
         } catch (Throwable ignored) {
             appleskinLoaded = false;
         }
-        if (appleskinLoaded) {
-            TacHudConfig cfg = com.mrkun.tachud.config.ConfigManager.get();
-            cfg.vanillaHud.autoHunger = false;
-        }
     }
 
     /** Call once after joining a world to show the AppleSkin hint. */
@@ -135,46 +151,56 @@ public final class VanillaHudOverlay {
         if (mc.player != null) {
             mc.player.displayClientMessage(
                     Component.literal(
-                            "§e[TacHUD] §f检测到 AppleSkin → "
-                                    + "已自动关闭饥饿/饱和度美化，避免冲突"), true);
+                            "\u00a7e[TacHUD] \u00a7f\u68c0\u6d4b\u5230 AppleSkin \u2192 "
+                                    + "\u5df2\u81ea\u52a8\u5173\u95ed\u9965\u997f/\u9971\u548c\u5ea6\u7f8e\u5316\uff0c\u907f\u514d\u51b2\u7a81"),
+                    true);
         }
     }
 
-    // ── Segmented‑bar drawing ──────────────────────────────────────────
+    // ── Tactical bar drawing ───────────────────────────────────────────
 
     /**
-     * Draw a horizontal bar composed of segments, each separated by a small
-     * gap. The filled proportion is visualised by <i>whole segments</i>
-     * (a fractional segment is drawn at the end).
+     * Draw a continuous horizontal bar with segment dividers and a 1px border
+     * frame. Much cleaner than the old separate-segment approach.
+     *
+     * @param x         top-left X
+     * @param y         top-left Y
+     * @param w         total width
+     * @param h         bar height
+     * @param ratio     fill ratio (0.0–1.0)
+     * @param segments  number of segment dividers to draw
+     * @param fillColor ARGB fill colour
+     * @param bgColor   ARGB background colour
      */
-    private static void drawSegmentedBar(GuiGraphics g,
-                                         int x, int y, int totalW, int h, int gap,
-                                         float ratio, int segments,
-                                         int fillColor, int bgColor) {
-        double segW = (totalW - (segments - 1) * gap) / (double) segments;
-        int segWI = (int) Math.round(segW);
-        int filledN = (int) Math.floor(ratio * segments);
+    private static void drawTacticalBar(GuiGraphics g,
+                                        int x, int y, int w, int h,
+                                        float ratio, int segments,
+                                        int fillColor, int bgColor) {
+        // Background (full bar)
+        g.fill(x, y, x + w, y + h, bgColor);
 
-        // Background (all segments, dark)
-        for (int i = 0; i < segments; i++) {
-            int sx = x + i * (segWI + gap);
-            if (bgColor != 0) {
-                g.fill(sx, y, sx + segWI, y + h, bgColor);
+        // Fill (proportional)
+        int fillW = Math.max(0,
+                (int) Math.round(w * Math.min(1f, Math.max(0f, ratio))));
+        if (fillW > 0) {
+            g.fill(x, y, x + fillW, y + h, fillColor);
+        }
+
+        // Segment dividers (thin dark vertical lines)
+        if (segments > 1 && h >= 3) {
+            int segW = w / segments;
+            for (int i = 1; i < segments; i++) {
+                int dx = x + i * segW;
+                g.fill(dx, y, dx + 1, y + h, 0x33000000);
             }
         }
 
-        // Filled segments
-        for (int i = 0; i < filledN; i++) {
-            int sx = x + i * (segWI + gap);
-            g.fill(sx, y, sx + segWI, y + h, fillColor);
+        // Border frame (1px, semi-transparent dark)
+        if (h >= 3) {
+            g.fill(x, y, x + w, y + 1, 0x66000000);           // top
+            g.fill(x, y + h - 1, x + w, y + h, 0x66000000);   // bottom
         }
-
-        // Partial segment (the fractional part)
-        float remainder = ratio * segments - filledN;
-        if (remainder > 0.001f && filledN < segments) {
-            int sx = x + filledN * (segWI + gap);
-            int partialW = Math.max(1, (int) Math.round(segWI * remainder));
-            g.fill(sx, y, sx + partialW, y + h, fillColor);
-        }
+        g.fill(x, y, x + 1, y + h, 0x66000000);               // left
+        g.fill(x + w - 1, y, x + w, y + h, 0x66000000);       // right
     }
 }

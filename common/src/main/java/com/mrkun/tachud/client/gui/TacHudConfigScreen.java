@@ -103,18 +103,19 @@ public final class TacHudConfigScreen extends Screen {
                 addToggle("显示 XP/s", () -> cfg.xpPop.showRate, v -> cfg.xpPop.showRate = v, x, y); y += ROW_STEP;
                 addColor("颜色", () -> cfg.xpPop.color, v -> cfg.xpPop.color = v, x, y); y += ROW_STEP;
             }
-            case 4 -> { // HUD美化 / Vanilla‑replacement bars
+            case 4 -> { // HUD美化 / COD-style corner bars
                 addToggle("替换原版 HUD", () -> cfg.vanillaHud.enabled, v -> cfg.vanillaHud.enabled = v, x, y); y += ROW_STEP;
-                addToggle("  生命值美化", () -> cfg.vanillaHud.healthEnabled, v -> cfg.vanillaHud.healthEnabled = v, x, y); y += ROW_STEP;
-                addToggle("  护甲值美化", () -> cfg.vanillaHud.armorEnabled, v -> cfg.vanillaHud.armorEnabled = v, x, y); y += ROW_STEP;
-                addToggle("  饥饿/饱和度美化", () -> cfg.vanillaHud.hungerEnabled, v -> cfg.vanillaHud.hungerEnabled = v, x, y); y += ROW_STEP;
-                addToggle("  经验条分段", () -> cfg.vanillaHud.xpBarEnabled, v -> cfg.vanillaHud.xpBarEnabled = v, x, y); y += ROW_STEP;
-                addNumber("条宽度", () -> cfg.vanillaHud.barWidth, v -> cfg.vanillaHud.barWidth = v, 80.0, 400.0, x, y); y += ROW_STEP;
-                addInt("底部边距", () -> (int) cfg.vanillaHud.marginBottom, v -> cfg.vanillaHud.marginBottom = v, 5, 80, x, y); y += ROW_STEP;
+                addToggle("  生命值美化 (左下)", () -> cfg.vanillaHud.healthEnabled, v -> cfg.vanillaHud.healthEnabled = v, x, y); y += ROW_STEP;
+                addToggle("  护甲值美化 (左下)", () -> cfg.vanillaHud.armorEnabled, v -> cfg.vanillaHud.armorEnabled = v, x, y); y += ROW_STEP;
+                addToggle("  饥饿/饱和度 (右下)", () -> cfg.vanillaHud.hungerEnabled, v -> cfg.vanillaHud.hungerEnabled = v, x, y); y += ROW_STEP;
+                addToggle("  AppleSkin兼容", () -> cfg.vanillaHud.autoHunger, v -> cfg.vanillaHud.autoHunger = v, x, y); y += ROW_STEP;
+                addToggle("  经验条分段(实验)", () -> cfg.vanillaHud.xpBarEnabled, v -> cfg.vanillaHud.xpBarEnabled = v, x, y); y += ROW_STEP;
+                addNumber("条宽度", () -> cfg.vanillaHud.barWidth, v -> cfg.vanillaHud.barWidth = v, 80.0, 300.0, x, y); y += ROW_STEP;
+                addInt("底部边距", () -> (int) cfg.vanillaHud.marginBottom, v -> cfg.vanillaHud.marginBottom = v, 4, 40, x, y); y += ROW_STEP;
                 addColor("健康色", () -> cfg.vanillaHud.healthColor, v -> cfg.vanillaHud.healthColor = v, x, y); y += ROW_STEP;
                 addColor("护甲色", () -> cfg.vanillaHud.armorColor, v -> cfg.vanillaHud.armorColor = v, x, y); y += ROW_STEP;
                 addColor("饥饿色", () -> cfg.vanillaHud.hungerColor, v -> cfg.vanillaHud.hungerColor = v, x, y); y += ROW_STEP;
-                addColor("经验色", () -> cfg.vanillaHud.xpColor, v -> cfg.vanillaHud.xpColor = v, x, y); y += ROW_STEP;
+                addColor("饱和度色", () -> cfg.vanillaHud.saturationColor, v -> cfg.vanillaHud.saturationColor = v, x, y); y += ROW_STEP;
             }
             case 5 -> { // 模块开关 / Modules
                 addToggle("低血量警示", () -> cfg.lowHealth.enabled, v -> cfg.lowHealth.enabled = v, x, y); y += ROW_STEP;
