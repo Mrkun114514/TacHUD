@@ -1,0 +1,24 @@
+# TacHUD 状态值美化 - 验证清单
+
+- [x] Checkpoint 1: `TacHudConfig.java` 中添加了氧气值相关配置项（启用开关、颜色配置）和 UI 自定义选项（位置偏移、宽度、高度）
+- [x] Checkpoint 2: `TacHudConfigScreen.java` 中添加了氧气值的配置界面和 UI 自定义配置界面
+- [x] Checkpoint 3: `VanillaHudOverlay.java` 中添加了氧气值进度条渲染逻辑
+- [x] Checkpoint 4: `HudRenderer.java` 中添加了 `VanillaHudOverlay.render()` 调用
+- [x] Checkpoint 5: `GuiMixin.java` 的 `isActive()` 和 `isFoodCancelled()` 方法正确检查配置
+- [x] Checkpoint 6: `VanillaHudNeoForge.java` 的 `onRenderGuiLayerPre()` 方法正确取消原版 HUD 渲染
+- [x] Checkpoint 7: 项目编译成功（无语法错误）
+- [ ] Checkpoint 8: 生命值进度条正确显示（左下，含数值）
+- [ ] Checkpoint 9: 护甲值进度条正确显示（生命值上方，含数值）
+- [ ] Checkpoint 10: 氧气值进度条正确显示（护甲值上方，仅在水下显示）
+- [ ] Checkpoint 11: 饥饿值进度条正确显示（右下，含数值）
+- [ ] Checkpoint 12: 饱和度进度条正确显示（饥饿值上方）
+- [ ] Checkpoint 13: Fabric 平台原版 HUD 被正确隐藏
+- [ ] Checkpoint 14: NeoForge 平台原版 HUD 被正确隐藏
+- [ ] Checkpoint 15: 配置选项实时生效，无需重启游戏
+- [ ] Checkpoint 16: 生命值进度条位置可通过配置偏移调整
+- [ ] Checkpoint 17: 护甲值进度条位置可通过配置偏移调整
+- [ ] Checkpoint 18: 氧气值进度条位置可通过配置偏移调整
+- [ ] Checkpoint 19: 饥饿值进度条位置可通过配置偏移调整
+- [ ] Checkpoint 20: 饱和度进度条位置可通过配置偏移调整
+- [ ] Checkpoint 21: 各状态条宽度可通过配置调整
+- [ ] Checkpoint 22: 各状态条高度可通过配置调整

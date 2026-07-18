@@ -49,74 +49,101 @@ public final class VanillaHudOverlay {
         detectAppleSkin();
 
         double f = HudScale.factor(height, cfg);
-        int barW = (int) (vh.barWidth * f);
         int sideMargin = Math.max(2, (int) (6 * f));
-        int healthH = Math.max(2, (int) (vh.healthHeight * f));
-        int armorH = Math.max(2, (int) (vh.armorHeight * f));
-        int gap = Math.max(1, (int) (2 * f));
+        int gap = Math.max(1, (int) (vh.segmentGap * f));
         int bottomMargin = Math.max(2, (int) (vh.marginBottom * f));
         int textOff = Math.max(3, (int) (4 * f));
 
-        // ── Y positions ────────────────────────────────────────────────
-        // Health at the very bottom; armour directly above it (COD style).
-        int healthY = height - bottomMargin - healthH;
-        int armorY  = healthY - gap - armorH;
-        // Right side mirrors left.
-        int hungerY = healthY;
-        int satY    = armorY;
+        int healthW = Math.max(2, (int) (vh.healthWidth * f));
+        int healthH = Math.max(2, (int) (vh.healthHeight * f));
+        int armorW = Math.max(2, (int) (vh.armorWidth * f));
+        int armorH = Math.max(2, (int) (vh.armorHeight * f));
+        int airW = Math.max(2, (int) (vh.airWidth * f));
+        int airH = Math.max(2, (int) (vh.airHeight * f));
+        int hungerW = Math.max(2, (int) (vh.hungerWidth * f));
+        int hungerH = Math.max(2, (int) (vh.healthHeight * f));
+        int satW = Math.max(2, (int) (vh.saturationWidth * f));
+        int satH = Math.max(2, (int) (vh.armorHeight * f));
 
-        // ── Left side: armour (above) + health (below) ─────────────────
+        int healthOffsetX = (int) (vh.healthOffsetX * f);
+        int healthOffsetY = (int) (vh.healthOffsetY * f);
+        int armorOffsetX = (int) (vh.armorOffsetX * f);
+        int armorOffsetY = (int) (vh.armorOffsetY * f);
+        int airOffsetX = (int) (vh.airOffsetX * f);
+        int airOffsetY = (int) (vh.airOffsetY * f);
+        int hungerOffsetX = (int) (vh.hungerOffsetX * f);
+        int hungerOffsetY = (int) (vh.hungerOffsetY * f);
+        int satOffsetX = (int) (vh.saturationOffsetX * f);
+        int satOffsetY = (int) (vh.saturationOffsetY * f);
+
+        int healthY = height - bottomMargin - healthH + healthOffsetY;
+        int armorY  = healthY - gap - armorH + armorOffsetY;
+        int airY    = armorY - gap - airH + airOffsetY;
+        int hungerY = healthY + hungerOffsetY;
+        int satY    = armorY + satOffsetY;
+
         int leftX = sideMargin;
+        int rightX = width - sideMargin - hungerW;
+
+        if (vh.airEnabled && p.getAirSupply() < p.getMaxAirSupply()) {
+            float airRatio = Math.max(0f, (float) p.getAirSupply() / p.getMaxAirSupply());
+            int airClr  = TacHudConfig.argb(vh.airColor, 0xFF00BFFF);
+            int airBg   = TacHudConfig.argb(vh.airBgColor, 0xFF152A3A);
+            int airX = leftX + airOffsetX;
+            drawTacticalBar(g, airX, airY, airW, airH,
+                    airRatio, vh.airSegments, airClr, airBg);
+            g.drawString(mc.font, String.valueOf((int) p.getAirSupply()),
+                    airX + airW + textOff, airY - 1, airClr, false);
+        }
 
         if (vh.armorEnabled && p.getArmorValue() > 0) {
             float armorRatio = Math.min(1f, p.getArmorValue() / 20f);
             int armorClr  = TacHudConfig.argb(vh.armorColor, 0xFF3CB4FF);
             int armorBg   = TacHudConfig.argb(vh.armorBgColor, 0xFF1A2A3A);
-            drawTacticalBar(g, leftX, armorY, barW, armorH,
+            int armorX = leftX + armorOffsetX;
+            drawTacticalBar(g, armorX, armorY, armorW, armorH,
                     armorRatio, 4, armorClr, armorBg);
             g.drawString(mc.font, String.valueOf((int) p.getArmorValue()),
-                    leftX + barW + textOff, armorY - 1, armorClr, false);
+                    armorX + armorW + textOff, armorY - 1, armorClr, false);
         }
 
         if (vh.healthEnabled) {
             float healthRatio = Math.max(0f, p.getHealth() / p.getMaxHealth());
             int hpClr  = TacHudConfig.argb(vh.healthColor, 0xFFCC0000);
             int hpBg   = TacHudConfig.argb(vh.healthBgColor, 0xFF3A1515);
-            drawTacticalBar(g, leftX, healthY, barW, healthH,
+            int healthX = leftX + healthOffsetX;
+            drawTacticalBar(g, healthX, healthY, healthW, healthH,
                     healthRatio, vh.healthSegments, hpClr, hpBg);
             String hpText = (int) p.getHealth() + "/" + (int) p.getMaxHealth();
             g.drawString(mc.font, hpText,
-                    leftX + barW + textOff, healthY - 1, hpClr, false);
+                    healthX + healthW + textOff, healthY - 1, hpClr, false);
         }
 
-        // ── Right side: saturation (above) + hunger (below) ────────────
         if (!appleskinLoaded && vh.autoHunger && vh.hungerEnabled) {
-            int rightX = width - sideMargin - barW;
+            int satX = rightX + satOffsetX;
+            int hungerX = rightX + hungerOffsetX;
 
-            // Saturation bar (golden, above hunger)
             float satRatio = Math.min(1f,
                     p.getFoodData().getSaturationLevel() / 20f);
             if (satRatio > 0.01f) {
                 int satClr = TacHudConfig.argb(vh.saturationColor, 0xFFFFD700);
                 int satBg  = TacHudConfig.argb(vh.hungerBgColor, 0xFF3A3015);
-                drawTacticalBar(g, rightX, satY, barW, armorH,
+                drawTacticalBar(g, satX, satY, satW, satH,
                         satRatio, vh.hungerSegments, satClr, satBg);
             }
 
-            // Hunger bar (below)
             float hungerRatio = Math.min(1f,
                     p.getFoodData().getFoodLevel() / 20f);
             int hClr = TacHudConfig.argb(vh.hungerColor, 0xFFC49C48);
             int hBg  = TacHudConfig.argb(vh.hungerBgColor, 0xFF3A2A15);
-            drawTacticalBar(g, rightX, hungerY, barW, healthH,
+            drawTacticalBar(g, hungerX, hungerY, hungerW, hungerH,
                     hungerRatio, vh.hungerSegments, hClr, hBg);
             String foodText = String.valueOf(p.getFoodData().getFoodLevel());
             g.drawString(mc.font, foodText,
-                    rightX - textOff - mc.font.width(foodText),
+                    hungerX - textOff - mc.font.width(foodText),
                     hungerY - 1, hClr, false);
         }
 
-        // ── XP bar (optional, at very bottom edge) ─────────────────────
         if (vh.xpBarEnabled) {
             int hotbarW = (int) (182 * f);
             int xpW = hotbarW;

@@ -167,6 +167,8 @@ public class TacHudConfig {
         public boolean hungerEnabled = true;
         /** Replace the XP progress bar with a segmented line (experimental). */
         public boolean xpBarEnabled = false;
+        /** Replace air bubbles with a blue bar above the armor bar. */
+        public boolean airEnabled = true;
         /** Auto-disable hunger/saturation when AppleSkin is detected. */
         public boolean autoHunger = true;
 
@@ -175,10 +177,12 @@ public class TacHudConfig {
         public double marginBottom = 14.0;       // distance from bottom edge
         public double healthHeight = 8.0;        // health bar thickness
         public double armorHeight = 5.0;         // armor bar thickness
-        public double segmentGap = 2.0;          // gap between bar and armor
+        public double airHeight = 5.0;           // air bar thickness
+        public double segmentGap = 2.0;          // gap between bars
         public int healthSegments = 5;           // number of health segments
         public int hungerSegments = 6;           // hunger bar segments
         public int xpSegments = 5;               // XP bar segments
+        public int airSegments = 4;              // air bar segments
         public String healthColor = "#FFCC0000";
         public String healthBgColor = "#FF3A1515";
         public String armorColor = "#FF3CB4FF";
@@ -186,8 +190,29 @@ public class TacHudConfig {
         public String hungerColor = "#FFC49C48";
         public String hungerBgColor = "#FF3A2A15";
         public String saturationColor = "#FFFFD700"; // golden bar (above hunger)
+        public String airColor = "#FF00BFFF";    // sky blue bar (above armor)
+        public String airBgColor = "#FF152A3A";  // dark blue background
         public String xpColor = "#FF7CFC00";
         public String xpBgColor = "#FF0A2A0A";
+
+        // ---- Position offsets (custom UI positioning) -------------------
+        public double healthOffsetX = 0.0;       // X offset for health bar
+        public double healthOffsetY = 0.0;       // Y offset for health bar
+        public double armorOffsetX = 0.0;        // X offset for armor bar
+        public double armorOffsetY = 0.0;        // Y offset for armor bar
+        public double airOffsetX = 0.0;          // X offset for air bar
+        public double airOffsetY = 0.0;          // Y offset for air bar
+        public double hungerOffsetX = 0.0;       // X offset for hunger bar
+        public double hungerOffsetY = 0.0;       // Y offset for hunger bar
+        public double saturationOffsetX = 0.0;   // X offset for saturation bar
+        public double saturationOffsetY = 0.0;   // Y offset for saturation bar
+
+        // ---- Individual bar dimensions ----------------------------------
+        public double healthWidth = 160.0;       // health bar width (overrides barWidth)
+        public double armorWidth = 160.0;        // armor bar width (overrides barWidth)
+        public double airWidth = 160.0;          // air bar width (overrides barWidth)
+        public double hungerWidth = 160.0;       // hunger bar width (overrides barWidth)
+        public double saturationWidth = 160.0;   // saturation bar width (overrides barWidth)
     }
 
     /** Parse an ARGB hex string like {@code #FFFF2A25}; falls back on error. */
