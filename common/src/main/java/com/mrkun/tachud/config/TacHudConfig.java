@@ -178,8 +178,11 @@ public class TacHudConfig {
         public double healthHeight = 8.0;        // health bar thickness
         public double armorHeight = 5.0;         // armor bar thickness
         public double airHeight = 5.0;           // air bar thickness
+        public double hungerHeight = 8.0;        // hunger bar thickness
+        public double saturationHeight = 5.0;    // saturation bar thickness
         public double segmentGap = 2.0;          // gap between bars
         public int healthSegments = 5;           // number of health segments
+        public int armorSegments = 4;            // armor bar segments
         public int hungerSegments = 6;           // hunger bar segments
         public int xpSegments = 5;               // XP bar segments
         public int airSegments = 4;              // air bar segments

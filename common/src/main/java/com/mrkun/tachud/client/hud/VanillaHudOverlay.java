@@ -61,9 +61,9 @@ public final class VanillaHudOverlay {
         int airW = Math.max(2, (int) (vh.airWidth * f));
         int airH = Math.max(2, (int) (vh.airHeight * f));
         int hungerW = Math.max(2, (int) (vh.hungerWidth * f));
-        int hungerH = Math.max(2, (int) (vh.healthHeight * f));
+        int hungerH = Math.max(2, (int) (vh.hungerHeight * f));
         int satW = Math.max(2, (int) (vh.saturationWidth * f));
-        int satH = Math.max(2, (int) (vh.armorHeight * f));
+        int satH = Math.max(2, (int) (vh.saturationHeight * f));
 
         int healthOffsetX = (int) (vh.healthOffsetX * f);
         int healthOffsetY = (int) (vh.healthOffsetY * f);
@@ -102,7 +102,7 @@ public final class VanillaHudOverlay {
             int armorBg   = TacHudConfig.argb(vh.armorBgColor, 0xFF1A2A3A);
             int armorX = leftX + armorOffsetX;
             drawTacticalBar(g, armorX, armorY, armorW, armorH,
-                    armorRatio, 4, armorClr, armorBg);
+                    armorRatio, vh.armorSegments, armorClr, armorBg);
             g.drawString(mc.font, String.valueOf((int) p.getArmorValue()),
                     armorX + armorW + textOff, armorY - 1, armorClr, false);
         }
