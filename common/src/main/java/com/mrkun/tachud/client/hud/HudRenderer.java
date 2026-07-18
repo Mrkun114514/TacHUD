@@ -2,7 +2,6 @@ package com.mrkun.tachud.client.hud;
 
 import com.mrkun.tachud.client.hud.KillConfirmOverlay;
 import com.mrkun.tachud.client.hud.XpPopOverlay;
-import com.mrkun.tachud.client.hud.VanillaHudOverlay;
 import com.mrkun.tachud.config.ConfigManager;
 import com.mrkun.tachud.config.TacHudConfig;
 import net.minecraft.client.Minecraft;
@@ -59,8 +58,6 @@ public final class HudRenderer {
         CompassOverlay.render(graphics, mc, player, cfg, width, height);
         KillFeedOverlay.render(graphics, mc, cfg, width, height, now);
 
-        // Vanilla‑replacement bars (COD‑style health / armour / food / XP)
-        VanillaHudOverlay.render(graphics, mc, cfg, width, height, now);
     }
 
     // ---- ReDeploy detection (runtime, zero compile dep) ------------------

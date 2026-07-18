@@ -158,7 +158,7 @@ public class TacHudConfig {
 
     // ---- Vanilla-HUD replacement (COD-style corner bars) ----------------
     public static class VanillaHud {
-        public boolean enabled = true;
+        public boolean enabled = false;
         /** Replace health hearts with a compact COD-style bar (bottom-left). */
         public boolean healthEnabled = true;
         /** Replace armor icons with a thin blue bar above the health bar. */

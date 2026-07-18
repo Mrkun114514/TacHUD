@@ -1,7 +1,5 @@
 package com.mrkun.tachud.fabric.mixin;
 
-import com.mrkun.tachud.config.ConfigManager;
-import com.mrkun.tachud.config.TacHudConfig;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
@@ -14,19 +12,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * Cancels vanilla rendering of health / armour / food / XP bars whenever
  * TacHUD's {@code vanillaHud} replacement is active, so only our COD‑style
  * bars (rendered by {@code VanillaHudOverlay}) appear.
+ *
+ * <p><b>Currently disabled</b> — HUD beautification has been fully reverted.
+ * The mixins remain in place (compiles cleanly) but {@link #isActive()} always
+ * returns {@code false}, so vanilla rendering is never interrupted.
  */
 @Mixin(Gui.class)
 public class GuiMixin {
 
     private static boolean isActive() {
-        TacHudConfig cfg = ConfigManager.get();
-        return cfg.masterEnabled && cfg.vanillaHud.enabled;
+        // Disabled — HUD beautification fully reverted.
+        return false;
     }
 
     private static boolean isFoodCancelled() {
-        TacHudConfig cfg = ConfigManager.get();
-        return cfg.masterEnabled && cfg.vanillaHud.enabled
-                && cfg.vanillaHud.autoHunger && cfg.vanillaHud.hungerEnabled;
+        return false;
     }
 
     // ── Health hearts ───────────────────────────────────────────────────
