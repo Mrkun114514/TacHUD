@@ -62,14 +62,4 @@ public class GuiMixin {
                                    int i, int j, CallbackInfo ci) {
         if (isFoodCancelled()) ci.cancel();
     }
-
-    // ── Air bubbles ────────────────────────────────────────────────────
-
-    @Inject(method = "renderAir", at = @At("HEAD"), cancellable = true)
-    private void tachud$cancelAir(GuiGraphics graphics, CallbackInfo ci) {
-        TacHudConfig cfg = ConfigManager.get();
-        if (cfg.masterEnabled && cfg.vanillaHud.enabled && cfg.vanillaHud.airEnabled) {
-            ci.cancel();
-        }
-    }
 }

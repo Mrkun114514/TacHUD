@@ -197,6 +197,11 @@ public class TacHudConfig {
         public String airBgColor = "#FF152A3A";  // dark blue background
         public String xpColor = "#FF7CFC00";
         public String xpBgColor = "#FF0A2A0A";
+        public String healthExtraColor = "#FFFFD700"; // golden absorption hearts
+        public double healthRingRadius = 28.0;    // radius of health ring
+        public double healthRingThickness = 6.0;  // thickness of health ring
+        public boolean chatEnabled = true;        // enable chat box shift
+        public double chatOffsetY = 40.0;         // pixels to shift chat upward
 
         // ---- Position offsets (custom UI positioning) -------------------
         public double healthOffsetX = 0.0;       // X offset for health bar
