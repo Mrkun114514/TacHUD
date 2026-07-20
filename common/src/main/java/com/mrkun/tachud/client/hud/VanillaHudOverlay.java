@@ -1,6 +1,5 @@
 package com.mrkun.tachud.client.hud;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mrkun.tachud.config.TacHudConfig;
 import com.mrkun.tachud.config.TacHudConfig.VanillaHud;
 import dev.architectury.platform.Platform;
@@ -80,31 +79,23 @@ public final class VanillaHudOverlay {
 
         int gap = Math.max(1, (int) (2 * f));
 
-        // ── 内环：血量（红色，加法混合发光）──
+        // ── 内环：血量（红色，发光）──
         int healthBg = TacHudConfig.argb(vh.healthBgColor, 0xFF3A1515);
         int healthClr = TacHudConfig.argb(vh.healthColor, 0xFFCC0000);
         float healthRatio = Math.min(1f, health / Math.max(1f, maxHealth));
 
-        // 背景环（普通混合）
         drawArc(g, cx, cy, radius, thickness, 1f, healthBg, -90, 360);
         if (healthRatio > 0) {
-            // 加法混合发光层
-            enableAdditiveBlend();
-            drawArc(g, cx, cy, radius + 3, thickness + 6,
-                    healthRatio, withAlpha(healthClr, 0x22), -90, 360);
-            drawArc(g, cx, cy, radius + 2, thickness + 4,
-                    healthRatio, withAlpha(healthClr, 0x44), -90, 360);
-            drawArc(g, cx, cy, radius + 1, thickness + 2,
-                    healthRatio, withAlpha(healthClr, 0x66), -90, 360);
-            disableAdditiveBlend();
-            // 主填充（普通混合）
+            // 发光层（多层高 alpha 叠加）
+            drawGlowArc(g, cx, cy, radius, thickness, healthRatio, healthClr, -90, 360);
+            // 主填充
             drawArc(g, cx, cy, radius, thickness, healthRatio, healthClr, -90, 360);
-            // 顶部高光（普通混合，亮白细线）
+            // 顶部高光
             drawArc(g, cx, cy, radius - 1, 1, healthRatio,
                     lighter(healthClr, 0.6f), -90, 360);
         }
 
-        // ── 中环：吸收血量（金色，金苹果，加法混合发光）──
+        // ── 中环：吸收血量（金色，金苹果，发光）──
         if (absorption > 0) {
             int absRadius = radius + thickness + gap;
             int absClr = TacHudConfig.argb(vh.healthExtraColor, 0xFFFFD700);
@@ -112,21 +103,14 @@ public final class VanillaHudOverlay {
             drawArc(g, cx, cy, absRadius, thickness, 1f, absBg, -90, 360);
             float absRatio = Math.min(1f, absorption / 20f);
             if (absRatio > 0) {
-                enableAdditiveBlend();
-                drawArc(g, cx, cy, absRadius + 3, thickness + 6,
-                        absRatio, withAlpha(absClr, 0x22), -90, 360);
-                drawArc(g, cx, cy, absRadius + 2, thickness + 4,
-                        absRatio, withAlpha(absClr, 0x44), -90, 360);
-                drawArc(g, cx, cy, absRadius + 1, thickness + 2,
-                        absRatio, withAlpha(absClr, 0x66), -90, 360);
-                disableAdditiveBlend();
+                drawGlowArc(g, cx, cy, absRadius, thickness, absRatio, absClr, -90, 360);
                 drawArc(g, cx, cy, absRadius, thickness, absRatio, absClr, -90, 360);
                 drawArc(g, cx, cy, absRadius - 1, 1, absRatio,
                         lighter(absClr, 0.6f), -90, 360);
             }
         }
 
-        // ── 外环：护甲（10段，1段=2值，蓝色，加法混合发光）──
+        // ── 外环：护甲（10段，1段=2值，蓝色，发光）──
         // 即使护甲为0也绘制背景环
         if (vh.armorEnabled) {
             int armorRadius = radius + (thickness + gap) * 2;
@@ -138,26 +122,16 @@ public final class VanillaHudOverlay {
             int gapDeg = 2;
             int drawSweep = segSweep - gapDeg;
 
-            // 先画所有背景段（普通混合）
             for (int i = filledSegs; i < 10; i++) {
                 int angle = -90 + i * segSweep;
                 drawArc(g, cx, cy, armorRadius, thickness, 1f, armorBg, angle, drawSweep);
             }
 
-            // 再画填充段的发光和主体
             if (filledSegs > 0) {
-                enableAdditiveBlend();
                 for (int i = 0; i < filledSegs; i++) {
                     int angle = -90 + i * segSweep;
-                    drawArc(g, cx, cy, armorRadius + 3, thickness + 6,
-                            1f, withAlpha(armorClr, 0x22), angle, drawSweep);
-                    drawArc(g, cx, cy, armorRadius + 2, thickness + 4,
-                            1f, withAlpha(armorClr, 0x44), angle, drawSweep);
-                    drawArc(g, cx, cy, armorRadius + 1, thickness + 2,
-                            1f, withAlpha(armorClr, 0x66), angle, drawSweep);
+                    drawGlowArc(g, cx, cy, armorRadius, thickness, 1f, armorClr, angle, drawSweep);
                 }
-                disableAdditiveBlend();
-                // 主填充 + 高光（普通混合）
                 for (int i = 0; i < filledSegs; i++) {
                     int angle = -90 + i * segSweep;
                     drawArc(g, cx, cy, armorRadius, thickness, 1f, armorClr, angle, drawSweep);
@@ -167,25 +141,23 @@ public final class VanillaHudOverlay {
             }
         }
 
-        // ── 中心数字（血量，加法混合发光）──
+        // ── 中心数字（血量，发光）──
         String hpText = String.valueOf((int) health);
         int textWidth = mc.font.width(hpText);
         int textX = cx - textWidth / 2;
         int textY = cy - 4;
-        // 加法混合发光文字
-        enableAdditiveBlend();
-        int glowClr = withAlpha(healthClr, 0x55);
+        // 发光文字（高 alpha）
+        int glowClr = withAlpha(healthClr, 0x80);
         g.drawString(mc.font, hpText, textX - 1, textY, glowClr, false);
         g.drawString(mc.font, hpText, textX + 1, textY, glowClr, false);
         g.drawString(mc.font, hpText, textX, textY - 1, glowClr, false);
         g.drawString(mc.font, hpText, textX, textY + 1, glowClr, false);
-        int glowClr2 = withAlpha(healthClr, 0x30);
+        int glowClr2 = withAlpha(healthClr, 0x50);
         g.drawString(mc.font, hpText, textX - 2, textY, glowClr2, false);
         g.drawString(mc.font, hpText, textX + 2, textY, glowClr2, false);
         g.drawString(mc.font, hpText, textX, textY - 2, glowClr2, false);
         g.drawString(mc.font, hpText, textX, textY + 2, glowClr2, false);
-        disableAdditiveBlend();
-        // 主文字（普通混合，白色带阴影）
+        // 主文字
         g.drawString(mc.font, hpText, textX, textY, 0xFFFFFFFF, true);
 
         // 下方小字
@@ -195,18 +167,15 @@ public final class VanillaHudOverlay {
                 cx - maxW / 2, cy + 5, 0xFFAAAAAA, true);
     }
 
-    // ── 加法混合控制 ─────────────────────────────────────────────────
+    // ── 发光效果绘制（多层高 alpha 叠加模拟光晕）───────────────────────
 
-    /** 启用加法混合（SRC_ALPHA, ONE），用于发光效果渲染。 */
-    private static void enableAdditiveBlend() {
-        RenderSystem.enableBlend();
-        // GL_SRC_ALPHA = 0x0302, GL_ONE = 0x0001
-        RenderSystem.blendFunc(0x0302, 0x0001);
-    }
-
-    /** 恢复默认 Alpha 混合（SRC_ALPHA, ONE_MINUS_SRC_ALPHA）。 */
-    private static void disableAdditiveBlend() {
-        RenderSystem.defaultBlendFunc();
+    private static void drawGlowArc(GuiGraphics g, int cx, int cy, int radius,
+                                    int thickness, float ratio, int color,
+                                    int startAngle, int sweepAngle) {
+        drawArc(g, cx, cy, radius + 4, thickness + 8, ratio, withAlpha(color, 0x40), startAngle, sweepAngle);
+        drawArc(g, cx, cy, radius + 3, thickness + 6, ratio, withAlpha(color, 0x60), startAngle, sweepAngle);
+        drawArc(g, cx, cy, radius + 2, thickness + 4, ratio, withAlpha(color, 0x80), startAngle, sweepAngle);
+        drawArc(g, cx, cy, radius + 1, thickness + 2, ratio, withAlpha(color, 0xB0), startAngle, sweepAngle);
     }
 
     // ── 圆弧绘制 ─────────────────────────────────────────────────────
@@ -260,12 +229,7 @@ public final class VanillaHudOverlay {
 
         drawArc(g, cx, cy, radius, thickness, 1f, airBg, startAngle, fanAngle);
         if (airRatio > 0) {
-            enableAdditiveBlend();
-            drawArc(g, cx, cy, radius + 2, thickness + 4,
-                    airRatio, withAlpha(airClr, 0x33), startAngle, fanAngle);
-            drawArc(g, cx, cy, radius + 1, thickness + 2,
-                    airRatio, withAlpha(airClr, 0x55), startAngle, fanAngle);
-            disableAdditiveBlend();
+            drawGlowArc(g, cx, cy, radius, thickness, airRatio, airClr, startAngle, fanAngle);
             drawArc(g, cx, cy, radius, thickness, airRatio, airClr, startAngle, fanAngle);
             drawArc(g, cx, cy, radius - 1, 1, airRatio,
                     lighter(airClr, 0.5f), startAngle, fanAngle);
@@ -367,11 +331,9 @@ public final class VanillaHudOverlay {
         int fillW = Math.max(0,
                 (int) Math.round(w * Math.min(1f, Math.max(0f, ratio))));
         if (fillW > 0) {
-            // 加法混合发光
-            enableAdditiveBlend();
-            g.fill(x, y - 2, x + fillW, y + h + 2, withAlpha(fillColor, 0x22));
-            g.fill(x, y - 1, x + fillW, y + h + 1, withAlpha(fillColor, 0x44));
-            disableAdditiveBlend();
+            // 发光层（多层高 alpha 叠加）
+            g.fill(x, y - 2, x + fillW, y + h + 2, withAlpha(fillColor, 0x40));
+            g.fill(x, y - 1, x + fillW, y + h + 1, withAlpha(fillColor, 0x70));
             // 主填充
             g.fill(x, y, x + fillW, y + h, fillColor);
             // 顶部高光

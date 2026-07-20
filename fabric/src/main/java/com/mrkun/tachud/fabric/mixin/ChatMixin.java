@@ -2,9 +2,8 @@ package com.mrkun.tachud.fabric.mixin;
 
 import com.mrkun.tachud.config.ConfigManager;
 import com.mrkun.tachud.config.TacHudConfig;
-import net.minecraft.client.gui.ChatComponent;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -12,10 +11,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-/**
- * Shifts the chat box upward to avoid overlapping with the tactical HUD.
- * Both rendering AND interaction coordinates are adjusted by the offset.
- */
 @Mixin(ChatComponent.class)
 public class ChatMixin {
 
@@ -46,7 +41,7 @@ public class ChatMixin {
         }
     }
 
-    @ModifyArgs(method = "getMessageAt", at = @At(value = "HEAD"))
+    @ModifyArgs(method = "getMessageAt", at = @At(value = "HEAD"), require = 0)
     private void tachud$adjustMessageAtY(Args args) {
         double offset = getChatOffset();
         if (offset != 0) {
