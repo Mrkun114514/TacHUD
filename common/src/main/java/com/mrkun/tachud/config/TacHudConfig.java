@@ -203,6 +203,25 @@ public class TacHudConfig {
         public boolean chatEnabled = true;        // enable chat box shift
         public double chatOffsetY = 40.0;         // pixels to shift chat upward
 
+        // ---- Centered tactical layout (concept-art look) ----------------
+        /** 居中战术布局：血环/护甲环环绕屏幕中心准星，饱和度在左、饥饿在右、
+         *  氧气在下。关闭则使用左下角布局。 */
+        public boolean centeredLayout = true;
+        /** 居中模式下血环半径（较大以留出中心准星空间）。 */
+        public double centeredRingRadius = 46.0;
+        /** 渲染发光十字准星（居中布局核心视觉）。 */
+        public boolean crosshairEnabled = true;
+        /** 准星颜色。 */
+        public String crosshairColor = "#FFFFFFFF";
+        /** 准星单臂长度（像素）。 */
+        public double crosshairSize = 6.0;
+        /** 准星中心留空（像素）。 */
+        public double crosshairGap = 3.0;
+        /** 真实辉光（基于帧缓冲实时模糊 bloom）。关闭则无发光。 */
+        public boolean glowEnabled = true;
+        /** 辉光强度（0~2，越大越亮）。 */
+        public double glowIntensity = 0.8;
+
         // ---- Position offsets (custom UI positioning) -------------------
         public double healthOffsetX = 0.0;       // X offset for health bar
         public double healthOffsetY = 0.0;       // Y offset for health bar

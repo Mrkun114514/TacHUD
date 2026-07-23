@@ -114,6 +114,11 @@ public final class TacHudConfigScreen extends Screen {
                 addToggle("  饥饿/饱和度", () -> cfg.vanillaHud.hungerEnabled, v -> cfg.vanillaHud.hungerEnabled = v, x, y); y += ROW_STEP;
                 addToggle("  AppleSkin兼容", () -> cfg.vanillaHud.autoHunger, v -> cfg.vanillaHud.autoHunger = v, x, y); y += ROW_STEP;
                 addToggle("  经验条分段", () -> cfg.vanillaHud.xpBarEnabled, v -> cfg.vanillaHud.xpBarEnabled = v, x, y); y += ROW_STEP;
+                addToggle("居中战术布局", () -> cfg.vanillaHud.centeredLayout, v -> cfg.vanillaHud.centeredLayout = v, x, y); y += ROW_STEP;
+                addToggle("  发光准星", () -> cfg.vanillaHud.crosshairEnabled, v -> cfg.vanillaHud.crosshairEnabled = v, x, y); y += ROW_STEP;
+                addColor("  准星颜色", () -> cfg.vanillaHud.crosshairColor, v -> cfg.vanillaHud.crosshairColor = v, x, y); y += ROW_STEP;
+                addToggle("辉光效果", () -> cfg.vanillaHud.glowEnabled, v -> cfg.vanillaHud.glowEnabled = v, x, y); y += ROW_STEP;
+                addNumber("  辉光强度", () -> cfg.vanillaHud.glowIntensity, v -> cfg.vanillaHud.glowIntensity = v, 0.0, 2.0, x, y); y += ROW_STEP;
 
                 addColor("生命值颜色", () -> cfg.vanillaHud.healthColor, v -> cfg.vanillaHud.healthColor = v, x, y); y += ROW_STEP;
                 addColor("护甲值颜色", () -> cfg.vanillaHud.armorColor, v -> cfg.vanillaHud.armorColor = v, x, y); y += ROW_STEP;
@@ -121,28 +126,28 @@ public final class TacHudConfigScreen extends Screen {
                 addColor("饥饿值颜色", () -> cfg.vanillaHud.hungerColor, v -> cfg.vanillaHud.hungerColor = v, x, y); y += ROW_STEP;
                 addColor("饱和度颜色", () -> cfg.vanillaHud.saturationColor, v -> cfg.vanillaHud.saturationColor = v, x, y); y += ROW_STEP;
 
-                addNumber("生命值宽度", () -> cfg.vanillaHud.healthWidth, v -> cfg.vanillaHud.healthWidth = v, 40.0, 300.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("护甲值宽度", () -> cfg.vanillaHud.armorWidth, v -> cfg.vanillaHud.armorWidth = v, 40.0, 300.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("氧气值宽度", () -> cfg.vanillaHud.airWidth, v -> cfg.vanillaHud.airWidth = v, 40.0, 300.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("饥饿值宽度", () -> cfg.vanillaHud.hungerWidth, v -> cfg.vanillaHud.hungerWidth = v, 40.0, 300.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("饱和度宽度", () -> cfg.vanillaHud.saturationWidth, v -> cfg.vanillaHud.saturationWidth = v, 40.0, 300.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("生命值宽度", () -> cfg.vanillaHud.healthWidth, v -> cfg.vanillaHud.healthWidth = v, 40.0, 300.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("护甲值宽度", () -> cfg.vanillaHud.armorWidth, v -> cfg.vanillaHud.armorWidth = v, 40.0, 300.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("氧气值宽度", () -> cfg.vanillaHud.airWidth, v -> cfg.vanillaHud.airWidth = v, 40.0, 300.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("饥饿值宽度", () -> cfg.vanillaHud.hungerWidth, v -> cfg.vanillaHud.hungerWidth = v, 40.0, 300.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("饱和度宽度", () -> cfg.vanillaHud.saturationWidth, v -> cfg.vanillaHud.saturationWidth = v, 40.0, 300.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
 
-                addNumber("生命值高度", () -> cfg.vanillaHud.healthHeight, v -> cfg.vanillaHud.healthHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("护甲值高度", () -> cfg.vanillaHud.armorHeight, v -> cfg.vanillaHud.armorHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("氧气值高度", () -> cfg.vanillaHud.airHeight, v -> cfg.vanillaHud.airHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("饥饿值高度", () -> cfg.vanillaHud.hungerHeight, v -> cfg.vanillaHud.hungerHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("饱和度高度", () -> cfg.vanillaHud.saturationHeight, v -> cfg.vanillaHud.saturationHeight = v, 2.0, 30.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("生命值高度", () -> cfg.vanillaHud.healthHeight, v -> cfg.vanillaHud.healthHeight = v, 2.0, 30.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("护甲值高度", () -> cfg.vanillaHud.armorHeight, v -> cfg.vanillaHud.armorHeight = v, 2.0, 30.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("氧气值高度", () -> cfg.vanillaHud.airHeight, v -> cfg.vanillaHud.airHeight = v, 2.0, 30.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("饥饿值高度", () -> cfg.vanillaHud.hungerHeight, v -> cfg.vanillaHud.hungerHeight = v, 2.0, 30.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("饱和度高度", () -> cfg.vanillaHud.saturationHeight, v -> cfg.vanillaHud.saturationHeight = v, 2.0, 30.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
 
-                addNumber("生命值偏移X", () -> cfg.vanillaHud.healthOffsetX, v -> cfg.vanillaHud.healthOffsetX = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("生命值偏移Y", () -> cfg.vanillaHud.healthOffsetY, v -> cfg.vanillaHud.healthOffsetY = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("护甲值偏移X", () -> cfg.vanillaHud.armorOffsetX, v -> cfg.vanillaHud.armorOffsetX = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("护甲值偏移Y", () -> cfg.vanillaHud.armorOffsetY, v -> cfg.vanillaHud.armorOffsetY = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("氧气值偏移X", () -> cfg.vanillaHud.airOffsetX, v -> cfg.vanillaHud.airOffsetX = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("氧气值偏移Y", () -> cfg.vanillaHud.airOffsetY, v -> cfg.vanillaHud.airOffsetY = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("饥饿值偏移X", () -> cfg.vanillaHud.hungerOffsetX, v -> cfg.vanillaHud.hungerOffsetX = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("饥饿值偏移Y", () -> cfg.vanillaHud.hungerOffsetY, v -> cfg.vanillaHud.hungerOffsetY = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("饱和度偏移X", () -> cfg.vanillaHud.saturationOffsetX, v -> cfg.vanillaHud.saturationOffsetX = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
-                addNumber("饱和度偏移Y", () -> cfg.vanillaHud.saturationOffsetY, v -> cfg.vanillaHud.saturationOffsetY = v, -200.0, 200.0, COL2_X, y2); y2 += ROW_STEP;
+                addNumber("生命值偏移X", () -> cfg.vanillaHud.healthOffsetX, v -> cfg.vanillaHud.healthOffsetX = v, -200.0, 200.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("生命值偏移Y", () -> cfg.vanillaHud.healthOffsetY, v -> cfg.vanillaHud.healthOffsetY = v, -200.0, 200.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("护甲值偏移X", () -> cfg.vanillaHud.armorOffsetX, v -> cfg.vanillaHud.armorOffsetX = v, -200.0, 200.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("护甲值偏移Y", () -> cfg.vanillaHud.armorOffsetY, v -> cfg.vanillaHud.armorOffsetY = v, -200.0, 200.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("氧气值偏移X", () -> cfg.vanillaHud.airOffsetX, v -> cfg.vanillaHud.airOffsetX = v, -200.0, 200.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("氧气值偏移Y", () -> cfg.vanillaHud.airOffsetY, v -> cfg.vanillaHud.airOffsetY = v, -200.0, 200.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("饥饿值偏移X", () -> cfg.vanillaHud.hungerOffsetX, v -> cfg.vanillaHud.hungerOffsetX = v, -200.0, 200.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("饥饿值偏移Y", () -> cfg.vanillaHud.hungerOffsetY, v -> cfg.vanillaHud.hungerOffsetY = v, -200.0, 200.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("饱和度偏移X", () -> cfg.vanillaHud.saturationOffsetX, v -> cfg.vanillaHud.saturationOffsetX = v, -200.0, 200.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
+                addNumber("饱和度偏移Y", () -> cfg.vanillaHud.saturationOffsetY, v -> cfg.vanillaHud.saturationOffsetY = v, -200.0, 200.0, COL2_X, y2, CTRL2_X); y2 += ROW_STEP;
             }
             case 5 -> { // 模块开关 / Modules
                 addToggle("低血量警示", () -> cfg.lowHealth.enabled, v -> cfg.lowHealth.enabled = v, x, y); y += ROW_STEP;
@@ -174,39 +179,74 @@ public final class TacHudConfigScreen extends Screen {
     }
 
     private void addNumber(String label, Supplier<Double> get, Consumer<Double> set, double min, double max, int x, int y) {
-        EditBox eb = new EditBox(this.font, CTRL_X, y - 2, 90, 18, Component.literal(""));
+        addNumber(label, get, set, min, max, x, y, CTRL_X);
+    }
+
+    private void addNumber(String label, Supplier<Double> get, Consumer<Double> set,
+                           double min, double max, int x, int y, int ctrlX) {
+        EditBox eb = new EditBox(this.font, ctrlX, y - 2, 90, 18, Component.literal(""));
         eb.setMaxLength(12);
         eb.setValue(String.format("%.2f", get.get()));
         this.addRenderableWidget(eb);
         labels.add(new Label(label, x, y + 5, 0xFFE0E0E0));
         final double mn = min, mx = max;
+        final double[] lastValid = {get.get().doubleValue()};
+        final boolean[] restoring = {false};
         liveEdits.add(() -> {
             String s = eb.getValue().trim();
-            if (s.isEmpty()) return;
+            if (s.isEmpty()) {
+                eb.setValue(String.format("%.2f", lastValid[0]));
+                return;
+            }
             try {
                 double v = Double.parseDouble(s);
                 v = Math.min(mx, Math.max(mn, v));
+                lastValid[0] = v;
+                if (Math.abs(v - get.get()) > 0.0001 || s.length() != eb.getValue().length()) {
+                    String fmt = String.format("%.2f", v);
+                    if (!fmt.equals(eb.getValue())) {
+                        restoring[0] = true;
+                        eb.setValue(fmt);
+                        restoring[0] = false;
+                    }
+                }
                 set.accept(v);
             } catch (NumberFormatException ignored) {
+                eb.setValue(String.format("%.2f", lastValid[0]));
             }
         });
     }
 
     private void addInt(String label, Supplier<Integer> get, Consumer<Integer> set, int min, int max, int x, int y) {
-        EditBox eb = new EditBox(this.font, CTRL_X, y - 2, 90, 18, Component.literal(""));
+        addInt(label, get, set, min, max, x, y, CTRL_X);
+    }
+
+    private void addInt(String label, Supplier<Integer> get, Consumer<Integer> set,
+                        int min, int max, int x, int y, int ctrlX) {
+        EditBox eb = new EditBox(this.font, ctrlX, y - 2, 90, 18, Component.literal(""));
         eb.setMaxLength(12);
         eb.setValue(Integer.toString(get.get()));
         this.addRenderableWidget(eb);
         labels.add(new Label(label, x, y + 5, 0xFFE0E0E0));
         final int mn = min, mx = max;
+        final int[] lastValid = {get.get().intValue()};
         liveEdits.add(() -> {
             String s = eb.getValue().trim();
-            if (s.isEmpty()) return;
+            if (s.isEmpty()) {
+                eb.setValue(Integer.toString(lastValid[0]));
+                return;
+            }
             try {
                 int v = Integer.parseInt(s);
                 v = Math.min(mx, Math.max(mn, v));
+                lastValid[0] = v;
+                String fmt = Integer.toString(v);
+                if (!fmt.equals(eb.getValue())) {
+                    eb.setValue(fmt);
+                }
                 set.accept(v);
             } catch (NumberFormatException ignored) {
+                eb.setValue(Integer.toString(lastValid[0]));
             }
         });
     }
@@ -273,8 +313,48 @@ public final class TacHudConfigScreen extends Screen {
     }
 
     private void saveAndClose() {
+        // 全量验证：确保所有数值在合法范围内
+        validateAll();
         ConfigManager.save();
         this.minecraft.setScreen(parent);
+    }
+
+    /** 保存前全量验证——防止越界值被持久化。 */
+    private void validateAll() {
+        TacHudConfig.VanillaHud vh = cfg.vanillaHud;
+        vh.healthWidth =       clampD(vh.healthWidth,       40.0, 300.0);
+        vh.armorWidth =        clampD(vh.armorWidth,        40.0, 300.0);
+        vh.airWidth =          clampD(vh.airWidth,          40.0, 300.0);
+        vh.hungerWidth =       clampD(vh.hungerWidth,       40.0, 300.0);
+        vh.saturationWidth =   clampD(vh.saturationWidth,   40.0, 300.0);
+        vh.healthHeight =      clampD(vh.healthHeight,       2.0,  30.0);
+        vh.armorHeight =       clampD(vh.armorHeight,        2.0,  30.0);
+        vh.airHeight =         clampD(vh.airHeight,          2.0,  30.0);
+        vh.hungerHeight =      clampD(vh.hungerHeight,       2.0,  30.0);
+        vh.saturationHeight =  clampD(vh.saturationHeight,   2.0,  30.0);
+        vh.healthOffsetX =     clampD(vh.healthOffsetX,   -200.0, 200.0);
+        vh.healthOffsetY =     clampD(vh.healthOffsetY,   -200.0, 200.0);
+        vh.armorOffsetX =      clampD(vh.armorOffsetX,    -200.0, 200.0);
+        vh.armorOffsetY =      clampD(vh.armorOffsetY,    -200.0, 200.0);
+        vh.airOffsetX =        clampD(vh.airOffsetX,      -200.0, 200.0);
+        vh.airOffsetY =        clampD(vh.airOffsetY,      -200.0, 200.0);
+        vh.hungerOffsetX =     clampD(vh.hungerOffsetX,   -200.0, 200.0);
+        vh.hungerOffsetY =     clampD(vh.hungerOffsetY,   -200.0, 200.0);
+        vh.saturationOffsetX = clampD(vh.saturationOffsetX, -200.0, 200.0);
+        vh.saturationOffsetY = clampD(vh.saturationOffsetY, -200.0, 200.0);
+        vh.centeredRingRadius = clampD(vh.centeredRingRadius, 20.0, 120.0);
+        vh.crosshairSize =     clampD(vh.crosshairSize,      1.0,  20.0);
+        vh.crosshairGap =      clampD(vh.crosshairGap,       0.0,  15.0);
+        vh.glowIntensity =     clampD(vh.glowIntensity,       0.0,   2.0);
+        cfg.uiScale =          clampD(cfg.uiScale,          0.5,   3.0);
+    }
+
+    private static double clampD(double v, double min, double max) {
+        return Math.min(max, Math.max(min, v));
+    }
+
+    private static int clampI(int v, int min, int max) {
+        return Math.min(max, Math.max(min, v));
     }
 
     private void cancel() {
